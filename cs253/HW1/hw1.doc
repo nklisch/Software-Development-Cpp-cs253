@@ -1,0 +1,25 @@
+Functions:
+
+input: 
+printEnemy(string[] key, string[] value)
+	-Prints a single enemy's parts,
+	-- each key value is held in the same index in the array 
+	-ends with a new line
+readEnemy(istream &mystream)
+	-Error Checking:
+		check Alphabetic, key or value is empty, same Key
+	-read in an enemy
+	-store each key in an array, and each value in anouther array
+isKeyUnique(string[] keys, string key) 
+	Checks that the key is not in keys
+	-returns true if the key is not in keys
+	-returns false if it already exists
+
+main(args[])
+	args[0] is name of this file
+	args[1] is name of the data input file
+
+	while(not end of file)
+		readEnemy()
+		printEnemy()
+
