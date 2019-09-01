@@ -1,2 +1,2 @@
-# cs370
-Repository for Computer Science cs370
+# School
+Repository for my computer science classes
