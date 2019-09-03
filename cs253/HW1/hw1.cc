@@ -11,8 +11,10 @@ bool isKeyunique(vector<string>&, string);
 bool isAlphabetic(string);
 bool getKey(string&, string&);
 bool getValue(string&,string&);
-//Print index of first not blank char, or -1 if not found
+//Finds index of first not blank char, or -1 if not found
 int findNotBlankChar(string&);
+//Finds index of first not blank char from the end of string, or -1 if not found
+int findNotBlankCharReverse(string&);
 bool isBlankLine(string&);
 bool readEnemy(vector<string>&, vector<string>&, string&);
 int getMaxCharLength(vector<string>&);
@@ -98,8 +100,9 @@ bool getValue(string &value, string &line){
 	
 	if(index < 0)
 		return false;
+	int length = findNotBlankCharReverse(line) - index + 1;
 	
-	value = line.substr(index,line.length() - 1);
+	value = line.substr(index,length);
 	return true;	
 }
 int findNotBlankChar(string &line){
@@ -111,6 +114,17 @@ int findNotBlankChar(string &line){
 		break;
 		}
 	i++;
+	}
+	return index;
+}
+
+int findNotBlankCharReverse(string &line){
+	int index = -1;
+	for(int i = line.length() - 1; i >= 0; i--){
+		if(line[i] != ' ' && line[i] != '\t'){
+		index = i;
+		break;
+		}
 	}
 	return index;
 }
