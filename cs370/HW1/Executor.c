@@ -29,6 +29,7 @@ float get_running_ratio (int seed) {
         {
             maxIteration = i;
         }
+        // Below is the line that causes a memory leak
         free(arr);
     }
 
