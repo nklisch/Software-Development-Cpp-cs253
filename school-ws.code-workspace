@@ -5,5 +5,20 @@
 		}
 	],
 	"settings": {
+		"files.associations": {
+			"string": "cpp",
+			"iostream": "cpp",
+			"iomanip": "cpp"
+		}
 	},
+	"extensions": {
+		"recommendations": [
+			"GitHub.vscode-pull-request-github",
+			"eamodio.gitlens",
+			"streetsidesoftware.code-spell-checker",
+			"twxs.cmake",
+			"xaver.clang-format",
+			"ms-vscode.cpptools"
+		]
+	}
 }
