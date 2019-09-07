@@ -3,6 +3,7 @@
 #include <string>
 
 using namespace std;
+string Error::program_name = "";
 
 void Error::outputError(const string &data, const string &reason)
 {

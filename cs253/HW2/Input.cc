@@ -26,6 +26,7 @@ bool readStdInput(vector<Enemy> &enemyList)
 
     skipBlankLines(cin, line);
   }
+  return true;
 }
 
 bool readStdEnemy(Enemy &newEnemy, string &line)
@@ -98,4 +99,4 @@ void skipBlankLines(istream &in, string &line)
   }
 }
 
-bool readFileInput(string &keys, vector<string> inFiles, vector<Enemy> &enemyList) {}
+//bool readFileInput(string &keys, vector<string> inFiles, vector<Enemy> &enemyList) {}
