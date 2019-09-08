@@ -8,7 +8,11 @@
 		"files.associations": {
 			"string": "cpp",
 			"iostream": "cpp",
-			"iomanip": "cpp"
+			"iomanip": "cpp",
+			"iosfwd": "cpp",
+			"vector": "cpp",
+			"*.tcc": "cpp",
+			"istream": "cpp"
 		}
 	},
 	"extensions": {

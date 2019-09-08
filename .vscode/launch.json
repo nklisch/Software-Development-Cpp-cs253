@@ -5,11 +5,32 @@
     "version": "0.2.0",
     "configurations": [
             {
-                "name": "g++ build and run file",
+                "name": "g++ br data in",
                 "type": "cppdbg",
                 "request": "launch",
                 "program": "${fileDirname}/main",
                 "args": ["<data"],
+                "stopAtEntry": false,
+                "cwd": "${fileDirname}",
+                "environment": [],
+                "externalConsole": false,
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ],
+                "preLaunchTask": "make active file",
+                "miDebuggerPath": "/usr/bin/gdb"
+            },
+            {
+                "name": "g++ br inputfiles",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${fileDirname}/main",
+                "args": ["keys","in1"],
                 "stopAtEntry": false,
                 "cwd": "${fileDirname}",
                 "environment": [],

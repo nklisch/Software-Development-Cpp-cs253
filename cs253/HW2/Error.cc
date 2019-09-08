@@ -5,8 +5,8 @@
 using namespace std;
 string Error::program_name = "";
 
-void Error::outputError(const string &data, const string &reason)
+void Error::outputError(const string &reason, const string &data)
 {
-  cerr << Error::program_name << "- Error! Reason: " << reason << "Offending Data: " << data
+  cerr << Error::program_name << "- Error! Reason: " << reason << "  Offending Data: " << data
        << "\n";
 }

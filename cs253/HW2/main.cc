@@ -11,14 +11,31 @@
 
 using namespace std;
 
-int main(int, char *argv[])
+int main(int argc, char *argv[])
 {
   Error::program_name = argv[0];
 
   vector<Enemy> enemyList;
   string line;
+  if (argc == 2)
+  {
+    Error::outputError("Wrong number of arguments", "Need 2 or more arguments, or no arguments");
+  }
 
-  readStdInput(enemyList);
+  if (argc == 1)
+  {
+    readStdInput(enemyList);
+  }
+  else
+  {
+    vector<string> inFiles;
+    string keyFile = argv[1];
+    for (int i = 2; i < argc; i++)
+    {
+      inFiles.push_back(argv[i]);
+    }
+    readFileInput(keyFile, inFiles, enemyList);
+  }
 
   if (enemyList.empty())
     return 0;

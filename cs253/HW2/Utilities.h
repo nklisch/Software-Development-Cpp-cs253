@@ -9,4 +9,5 @@ int findNotBlankCharReverse(const string &);
 //Finds index of first blank char from start of string of -1 if not found
 int findFirstBlankChar(const string &);
 bool isBlankLine(const string &);
-bool isAlphabetic(const string &); 
+bool isAlphabetic(const string &);
+string trim(const string &);
