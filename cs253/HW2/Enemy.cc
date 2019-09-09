@@ -6,7 +6,7 @@
 #include <vector>
 
 using namespace std;
-
+// Use a map, and a key list in the enemy, to print out the values correctly and check for valid keys// Make the keys a static value?
 Enemy::Enemy()
 {
   this->maxCharLength = 0;

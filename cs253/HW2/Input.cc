@@ -119,7 +119,9 @@ bool readFileInput(string &keyFile, vector<string> &inFiles, vector<Enemy> &enem
       Error::outputError("The following file failed to open.", keyFile);
       return false;
     }
-    readEnemysFile(inF, keys, enemyList);
+    if(!readEnemysFile(inF, keys, enemyList))
+      return false;
+    inF.close();
   }
   return true;
 }
@@ -174,11 +176,9 @@ bool readEnemyInFile(ifstream &inFile, string &line, vector<string> keys, Enemy 
       if (!newEnemy.add(key, value))
         return false;
 
-      if (!readInfileKey(line, keys, key))
-      {
-        Error::outputError("The key on this line is not valid.", line);
+      if (!readInfileKey(line, keys, key))        
         return false;
-      }
+      
       value = trim(line);
     }
     else
@@ -210,7 +210,7 @@ bool readInfileKey(string &line, const vector<string> &keys, string &key)
     if (k == key)
       return true;
   }
-
+  Error::outputError("The following key is not in the keylist file", key);
   return false;
 }
 
