@@ -119,7 +119,7 @@ bool readFileInput(string &keyFile, vector<string> &inFiles, vector<Enemy> &enem
       Error::outputError("The following file failed to open.", keyFile);
       return false;
     }
-    if(!readEnemysFile(inF, keys, enemyList))
+    if (!readEnemysFile(inF, keys, enemyList))
       return false;
     inF.close();
   }
@@ -176,9 +176,9 @@ bool readEnemyInFile(ifstream &inFile, string &line, vector<string> keys, Enemy 
       if (!newEnemy.add(key, value))
         return false;
 
-      if (!readInfileKey(line, keys, key))        
+      if (!readInfileKey(line, keys, key))
         return false;
-      
+
       value = trim(line);
     }
     else
