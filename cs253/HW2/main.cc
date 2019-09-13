@@ -1,6 +1,6 @@
 // Nathan Klisch
 // cs253, Fall2019
-// HW1
+// HW2
 #include <cctype>
 #include <iomanip>
 #include <iostream>
@@ -8,44 +8,102 @@
 #include <vector>
 #include "Error.h"
 #include "Input.h"
+#include "Keys.h"
+#include "Utilities.h"
+#include "Enemy.h"
 
 using namespace std;
+void printEnemyList(vector<Enemy>&);
 
 int main(int argc, char *argv[])
 {
+  vector<Enemy> enemyList;
   Error::program_name = argv[0];
 
-  vector<Enemy> enemyList;
   string line;
-  if (argc == 2)
+  if (argc == 1)
   {
-    Error::outputError("Wrong number of arguments", "Need 2 or more arguments, or no arguments");
+    Error("No Key file provided", "Need a Key File").print();
+    return 1;
   }
+  ifstream inF = ifstream(argv[1]);
+
+  if (!inF.is_open())
+  {
+    Error("This key file failed to open ", argv[1]).print();
+    return 1;
+  }
+  Keys validKeys;
+  Error::currentFile = argv[1];
+  try
+  {
+    validKeys = readKeyFile(inF);
+  }
+  catch (Error e)
+  {
+    e.print();
+    return 1;
+  }
+  Error::currentFile = "";
+  inF.close();
 
   if (argc == 1)
   {
-    readStdInput(enemyList);
+    try
+    {
+      readEnemysFile(cin, validKeys, enemyList);
+      printEnemyList(enemyList);
+    }
+    catch (Error e)
+    {
+      e.print();
+      return 1;
+    }
   }
   else
   {
-    vector<string> inFiles;
-    string keyFile = argv[1];
+
     for (int i = 2; i < argc; i++)
     {
-      inFiles.push_back(argv[i]);
+      Error::currentFile = argv[i];
+      inF.open(argv[i]);
+      if (!inF.is_open())
+      {
+        throw Error("This file failed to open ", argv[i]);
+        return 1;
+      }
+      try
+      {
+        readEnemysFile(inF, validKeys, enemyList);
+      }
+      catch (Error e)
+      {
+        e.print();
+        return 1;
+      }
+      
+      if(i < argc - 1)
+        cout << "\n";
+      Error::currentFile = "";
+      inF.close();
     }
-    readFileInput(keyFile, inFiles, enemyList);
   }
 
-  if (enemyList.empty())
-    return 0;
+  printEnemyList(enemyList);
 
-  for (size_t i = 0; i < enemyList.size() - 1; i++)
+  return 0;
+}
+
+void printEnemyList(vector<Enemy> &el)
+{
+  if (el.empty())
+    return;
+
+  for (size_t i = 0; i < el.size() - 1; i++)
   {
-    enemyList[i].printEnemy();
+    el[i].printEnemy();
     cout << '\n';
   }
 
-  enemyList.back().printEnemy();
-  return 0;
+  el.back().printEnemy();
 }

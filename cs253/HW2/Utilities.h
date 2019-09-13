@@ -1,4 +1,9 @@
+#ifndef Utilities_h
+#define Utilities_h
 #include <string>
+#include <string>
+#include <cctype>
+#include <iostream>
 
 using namespace std;
 
@@ -11,3 +16,7 @@ int findFirstBlankChar(const string &);
 bool isBlankLine(const string &);
 bool isAlphabetic(const string &);
 string trim(const string &);
+void skipBlankLines(istream &, string &);
+
+#endif
+

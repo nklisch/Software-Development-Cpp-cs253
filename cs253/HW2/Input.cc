@@ -1,73 +1,19 @@
-#include <iostream>
-#include <fstream>
-#include <cctype>
-#include <string>
-#include <vector>
-#include <iomanip>
-#include "Utilities.h"
-#include "Error.h"
 #include "Input.h"
 
 using namespace std;
 
-bool readStdInput(vector<Enemy> &enemyList)
+void readEnemysFile(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList)
 {
   string line;
-  string key;
-  string value;
-  skipBlankLines(cin, line);
-  while (cin)
+  while (getline(inFile, line))
   {
     Enemy newEnemy;
-    if (!readStdEnemy(newEnemy, line))
-      return false;
-
-    if (!newEnemy.empty())
-      enemyList.push_back(newEnemy);
-
-    skipBlankLines(cin, line);
+    skipBlankLines(inFile, line);
+    enemyList.push_back(readEnemy(inFile, line, validKeys));
   }
-  return true;
 }
 
-bool readStdEnemy(Enemy &newEnemy, string &line)
-{
-  do
-  {
-    string key;
-    string value;
-
-    if (isspace(line[0]))
-    {
-      Error::outputError("The Key is missing on the following line. ", line);
-      return false;
-    }
-
-    if (!readKey(line, key))
-      return false;
-
-    if (!readStdValue(line, value))
-    {
-      Error::outputError("The value is missing for the following key.", key);
-      return false;
-    }
-    if (!newEnemy.add(key, value))
-      return false;
-
-    getline(cin, line);
-  } while (!isBlankLine(line));
-  return true;
-}
-
-bool readStdValue(string &line, string &value)
-{
-  value = trim(line);
-  if (value.empty())
-    return false;
-  return true;
-}
-
-bool readKey(string &line, string &key)
+void readKey(string &line, string &key)
 {
   int index = findFirstBlankChar(line);
   if (index > 0)
@@ -83,101 +29,61 @@ bool readKey(string &line, string &key)
 
   if (!isAlphabetic(key))
   {
-    Error::outputError("The key is not alphabetic! ", key);
-    return false;
-  }
-
-  return true;
-}
-
-void skipBlankLines(istream &in, string &line)
-{
-  while (isBlankLine(line) && in)
-  {
-    getline(in, line);
+    throw Error("The key is not alphabetic", key);
   }
 }
 
-bool readFileInput(string &keyFile, vector<string> &inFiles, vector<Enemy> &enemyList)
+Keys readKeyFile(ifstream &inFile)
 {
-  vector<string> keys;
-  ifstream inF(keyFile);
-  if (!inF.is_open())
-  {
-    Error::outputError("The key file failed to open.", keyFile);
-    return false;
-  }
-
-  readKeyFile(inF, keys);
-  inF.close();
-
-  for (string file : inFiles)
-  {
-    inF.open(file);
-    if (!inF.is_open())
-    {
-      Error::outputError("The following file failed to open.", keyFile);
-      return false;
-    }
-    if (!readEnemysFile(inF, keys, enemyList))
-      return false;
-    inF.close();
-  }
-  return true;
-}
-
-bool readEnemysFile(ifstream &inFile, vector<string> &keys, vector<Enemy> &enemyList)
-{
+  Keys k;
+  string key;
   string line;
   while (getline(inFile, line))
   {
-    Enemy newEnemy;
     skipBlankLines(inFile, line);
-    if (!readEnemyInFile(inFile, line, keys, newEnemy))
-      return false;
-    enemyList.push_back(newEnemy);
+    //Remove or check for blanks before key?
+    readKey(line, key);
+    k.add(key);
   }
-  return true;
+  return k;
 }
 
-bool readEnemyInFile(ifstream &inFile, string &line, vector<string> keys, Enemy &newEnemy)
+Enemy readEnemy(istream &inFile, string &line, Keys& validKeys)
 {
   string key;
   string value;
-  if (!readInfileKey(line, keys, key))
-  {
-    Error::outputError("The key on this line is not valid.", line);
-    return false;
-  }
+  Enemy newEnemy;
+
+  readKey(line, key);
+  if(!validKeys.contains(key))
+    throw Error("This key is not valid, not in provided key file", key);
+
   value = trim(line);
+
   if (!getline(inFile, line))
   {
-    if (!newEnemy.add(key, value))
-      return false;
-
-    return true;
+    newEnemy.add(key, value);
   }
-
-  do
+  
+    do
   {
     if (!isspace(line[0]))
     {
       if (key.empty())
       {
-        Error::outputError("The key is missing for the following value.", value);
-        return false;
+        throw Error("The key is missing for this value", value);
       }
       if (value.empty())
       {
-        Error::outputError("The value is missing for the following key.", key);
-        return false;
+        throw Error("The value is missing for this key", key);
       }
 
-      if (!newEnemy.add(key, value))
-        return false;
 
-      if (!readInfileKey(line, keys, key))
-        return false;
+      newEnemy.add(key, value);
+
+      readKey(line,key);
+      if(!validKeys.contains(key))
+        throw Error("This key is not valid, not in provided key file", key);
 
       value = trim(line);
     }
@@ -191,41 +97,9 @@ bool readEnemyInFile(ifstream &inFile, string &line, vector<string> keys, Enemy 
 
   if (value.empty())
   {
-    Error::outputError("The value is missing for the following key.", key);
-    return false;
+    throw Error("The value is missing for this key", key);
   }
-  if (!newEnemy.add(key, value))
-    return false;
+  newEnemy.add(key, value);
 
-  return true;
-}
-
-bool readInfileKey(string &line, const vector<string> &keys, string &key)
-{
-  if (!readKey(line, key))
-    return false;
-
-  for (const string k : keys)
-  {
-    if (k == key)
-      return true;
-  }
-  Error::outputError("The following key is not in the keylist file", key);
-  return false;
-}
-
-bool readKeyFile(istream &inFile, vector<string> &keys)
-{
-  string line;
-  string key;
-  while (getline(inFile, line))
-  {
-    skipBlankLines(inFile, line);
-    //Remove or check for blanks before key?
-    if (!readKey(line, key))
-      return false;
-
-    keys.push_back(key);
-  }
-  return true;
+  return newEnemy;
 }

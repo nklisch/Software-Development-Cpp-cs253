@@ -1,16 +1,25 @@
+#ifndef Input_h
+#define INput_h
+
+#include <iostream>
+#include <fstream>
+#include <cctype>
 #include <string>
 #include <vector>
+#include <iomanip>
+#include "Utilities.h"
+#include "Error.h"
 #include "Enemy.h"
+#include "Keys.h"
 
 using namespace std;
 //Reads input from std Input using
-bool readStdInput(vector<Enemy> &enemyList);
-bool readFileInput(string &keyFiles, vector<string> &inFiles, vector<Enemy> &enemyList);
-bool readKey(string &line, string &key);
-bool readStdValue(string &line, string &value);
-bool readStdEnemy(Enemy &newEnemy, string &line);
-void skipBlankLines(istream &in, string &line);
-bool readEnemysFile(ifstream &inFile, vector<string> &keys, vector<Enemy> &enemyList);
-bool readEnemyInFile(ifstream &inFile, string &line, vector<string> keys, Enemy &newEnemy);
-bool readInfileKey(string &line, const vector<string> &keys, string &key);
-bool readKeyFile(istream &inFile, vector<string> &keys);
+
+void readInput(Keys &validKeys, ifstream &inFile, vector<Enemy> &enemyList);
+void readKey(string &line, string &key);
+void readEnemysFile(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList);
+Enemy readEnemy(istream &inFile, string &line, Keys& validKeys);
+Keys readKeyFile(ifstream &inFile);
+
+#endif
+
