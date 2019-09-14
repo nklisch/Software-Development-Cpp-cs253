@@ -1,8 +1,15 @@
-#include <string>
-#include <cctype>
+
 #include "Utilities.h"
 
 using namespace std;
+
+void skipBlankLines(istream &in, string &line)
+{
+  while (isBlankLine(line) && in)
+  {
+    getline(in, line);
+  }
+}
 
 bool isAlphabetic(const string &key)
 {

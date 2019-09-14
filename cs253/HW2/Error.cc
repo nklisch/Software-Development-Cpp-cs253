@@ -1,12 +1,34 @@
 #include "Error.h"
-#include <iostream>
-#include <string>
 
 using namespace std;
 string Error::program_name = "";
+string Error::currentFile = "";
 
-void Error::outputError(const string &reason, const string &data)
+Error::Error()
 {
-  cerr << Error::program_name << "- Error! Reason: " << reason << "  Offending Data: " << data
-       << "\n";
+  this->reason = "Default Error";
+  this->data = "";
+}
+
+Error::Error(const string &r,const string& d)
+{
+  this->reason = r;
+  this->data = d;
+}
+
+void Error::set(const string &r,const string &d){
+  this->reason = r;
+  this->data = d;
+}
+
+void Error::print()
+{
+  cerr << program_name << ": ";
+  if(currentFile != "")
+  {
+  cerr << "File: " << currentFile << " | " << this->reason << "| Offending Data: " << this->data << endl;
+  }
+  else {
+    cerr << ": " << this->data << endl;
+  }
 }
