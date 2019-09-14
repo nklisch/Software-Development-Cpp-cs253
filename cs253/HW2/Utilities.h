@@ -16,7 +16,5 @@ int findFirstBlankChar(const string &);
 bool isBlankLine(const string &);
 bool isAlphabetic(const string &);
 string trim(const string &);
-void skipBlankLines(istream &, string &);
 
 #endif
-
