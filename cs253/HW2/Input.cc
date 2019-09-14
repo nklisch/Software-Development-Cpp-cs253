@@ -33,9 +33,29 @@ void readKey(string &line, string &key)
   }
 }
 
-Keys readKeyFile(ifstream &inFile)
+void readstdInput(istream& in, Keys &k, vector<Enemy> &el){
+    readEnemysFile(in,k,el);
+}
+
+void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyList)
 {
-  Keys k;
+  ifstream inF;
+  for (auto f : files)
+    {
+      Error::currentFile = f;
+      inF.open(f);
+      if (!inF.is_open())
+        throw Error("This file failed to open ", f);
+      
+      readEnemysFile(inF, validKeys, enemyList);
+      
+      Error::currentFile = "";
+      inF.close();
+    }
+}
+
+Keys readKeyFile(ifstream &inFile, Keys &k)
+{
   string key;
   string line;
   while (getline(inFile, line))
