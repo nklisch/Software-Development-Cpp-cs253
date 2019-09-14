@@ -14,6 +14,7 @@ void readEnemysFile(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList)
 
 void readKey(string &line, string &key)
 {
+  trim(line);
   int index = findFirstBlankChar(line);
   if (index > 0)
   {
