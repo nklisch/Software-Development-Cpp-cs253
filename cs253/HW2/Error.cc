@@ -10,25 +10,27 @@ Error::Error()
   this->data = "";
 }
 
-Error::Error(const string &r,const string& d)
+Error::Error(const string &r, const string &d)
 {
   this->reason = r;
   this->data = d;
 }
 
-void Error::set(const string &r,const string &d){
+void Error::set(const string &r, const string &d)
+{
   this->reason = r;
   this->data = d;
 }
 
 void Error::print()
 {
-  cerr << program_name << ": ";
-  if(currentFile != "")
+  cerr << "Program: \"" << program_name << "\": ";
+  if (currentFile != "")
   {
-  cerr << "File: " << currentFile << " | " << this->reason << "| Offending Data: " << this->data << endl;
+    cerr << "Filename: \"" << currentFile << "\" | " << this->reason << "| Offending Data: " << this->data << endl;
   }
-  else {
+  else
+  {
     cerr << ": " << this->data << endl;
   }
 }

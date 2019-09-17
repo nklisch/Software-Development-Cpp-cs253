@@ -20,4 +20,4 @@ cmake_minimum_required(VERSION 3.14)
     add_executable(main main.cc Enemy.cc Error.cc Input.cc Utilities.cc Keys.cc)
 
     # Create a tar file every time:
-    add_custom_target(hw2.tar ALL COMMAND tar cf hw2.tar ./*.cc ./*.h CMakeLists.txt)
+    add_custom_target(hw2.tar ALL COMMAND tar cf hw2.tar ./*.cc ./*.h ./CMakeLists.txt)

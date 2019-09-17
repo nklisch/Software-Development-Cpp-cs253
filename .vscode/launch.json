@@ -30,7 +30,7 @@
                 "type": "cppdbg",
                 "request": "launch",
                 "program": "${fileDirname}/main",
-                "args": ["keys","in1"],
+                "args": ["keys","in1", "in2"],
                 "stopAtEntry": false,
                 "cwd": "${fileDirname}",
                 "environment": [],

@@ -3,14 +3,6 @@
 
 using namespace std;
 
-void skipBlankLines(istream &in, string &line)
-{
-  while (isBlankLine(line) && in)
-  {
-    getline(in, line);
-  }
-}
-
 bool isAlphabetic(const string &key)
 {
   for (const auto c : key)
@@ -65,6 +57,8 @@ int findFirstBlankChar(const string &line)
 
 bool isBlankLine(const string &line)
 {
+  if (line.empty())
+    return true;
   if (findNotBlankChar(line) >= 0)
     return false;
 
