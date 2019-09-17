@@ -26,11 +26,6 @@ void readKey(string &line, string &key)
     key = line;
     line.clear();
   }
-
-  if (!isAlphabetic(key))
-  {
-    throw Error("The key is not alphabetic", key);
-  }
 }
 
 void readstdInput(istream& in, Keys &k, vector<Enemy> &el){

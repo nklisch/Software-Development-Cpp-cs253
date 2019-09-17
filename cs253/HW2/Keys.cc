@@ -16,6 +16,10 @@ string& Keys::operator[](size_t i)
 
 void Keys::add(const string &key)
 {
+   if (!isAlphabetic(key))
+  {
+    throw Error("The key is not alphabetic", key);
+  }
   if (this->contains(key))
   {
     throw Error("Key already exists", key);
