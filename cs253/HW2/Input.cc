@@ -57,7 +57,6 @@ Keys readKeyFile(ifstream &inFile, Keys &k)
   {
     if (!isBlankLine(line))
     {
-      line = trim(line);
       readKey(line, key);
       k.add(key);
     }
