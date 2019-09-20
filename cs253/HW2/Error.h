@@ -8,11 +8,11 @@ using namespace std;
 class Error
 {
   private:
-  string reason;
-  string data;
+  string reason = "Default Error";
+  string data = "";
   public:
-  Error();
-  Error(const string&, const string&);
+  Error() = default;
+  Error(const string& r, const string& d) : reason(r), data(d){};
   void set(const string&,const string&);
   void print();
   static string program_name;

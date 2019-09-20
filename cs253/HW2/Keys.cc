@@ -1,12 +1,7 @@
 #include "Keys.h"
 
-Keys::Keys()
-{
-  this->maxCharLength = 0;
-}
-
 size_t Keys::size(){
-  return this->keys.size();
+  return keys.size();
 }
 
 string& Keys::operator[](size_t i)
@@ -20,24 +15,24 @@ void Keys::add(const string &key)
   {
     throw Error("The key is not alphabetic", key);
   }
-  if (this->contains(key))
+  if (contains(key))
   {
     throw Error("Key already exists", key);
   }
-  if (key.length() > this->maxCharLength)
-    this->maxCharLength = key.length();
+  if (key.length() > maxCharLength)
+    maxCharLength = key.length();
 
   keys.push_back(key);
 }
 
 bool Keys::empty()
 {
-  return this->empty();
+  return empty();
 }
 
 bool Keys::contains(const string &key)
 {
-  for (const string k : this->keys)
+  for (const string k : keys)
   {
     if (k == key)
       return true;
@@ -47,7 +42,7 @@ bool Keys::contains(const string &key)
 
 int Keys::getMaxCharLength()
 {
-  return this->maxCharLength;
+  return maxCharLength;
 }
 
 

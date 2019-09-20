@@ -11,9 +11,9 @@
 class Keys {
 private:
     vector<string> keys;
-    size_t maxCharLength;
+    size_t maxCharLength = 0;
 public:
-    Keys();
+    Keys() = default;
     void add(const string&);
     bool contains(const string&);
     int getMaxCharLength();

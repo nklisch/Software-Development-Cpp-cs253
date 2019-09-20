@@ -16,12 +16,12 @@ class Enemy
 
 private:
   bool isKeyunique(const string &);
-  int maxCharLength;
+  int maxCharLength = 0;
   Keys myKeys;
   vector<string> values;
 
 public:
-  Enemy();
+  Enemy() = default;
   void printEnemy();
   //Valid alphabetic key and properly formatted value
   //Only checks for uniqueness
