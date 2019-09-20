@@ -43,18 +43,20 @@ void getInput(vector<Enemy> &enemyList, int argc, char * argv[])
   if (argc == 1)
     throw Error("No Key file provided", "Need a Key File");
   
+  
+
   ifstream inF = ifstream(argv[1]);
+  Error::currentInput = argv[1];
 
   if (!inF.is_open())
     throw Error("This key file failed to open ", argv[1]);
   
   Keys validKeys;
-  Error::currentFile = argv[1];
+  
 
   readKeyFile(inF, validKeys);
-
-  Error::currentFile = "";
   inF.close();
+
   vector<string> files;
 
   for(int i = 2; i < argc; i++)

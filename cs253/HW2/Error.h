@@ -16,6 +16,6 @@ class Error
   void set(const string&,const string&);
   void print();
   static string program_name;
-  static string currentFile;
+  static string currentInput;
 };
 #endif 

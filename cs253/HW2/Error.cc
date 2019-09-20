@@ -2,8 +2,7 @@
 
 using namespace std;
 string Error::program_name = "";
-string Error::currentFile = "";
-
+string Error::currentInput = "N/A";
 void Error::set(const string &r, const string &d)
 {
   reason = r;
@@ -12,13 +11,7 @@ void Error::set(const string &r, const string &d)
 
 void Error::print()
 {
-  cerr << "Program: \"" << program_name << "\": ";
-  if (currentFile != "")
-  {
-    cerr << " | Input - File: \"" << currentFile << "\" | " << this->reason << "| Offending Data: " << this->data << endl;
-  }
-  else
-  {
-    cerr <<" | Input:\"cin\" | " << this->reason << "| Offending Data: " << this->data<< endl;
-  }
+  cerr << "Program: \"" << program_name << "\": " 
+       << " | Input: \"" << currentInput << "\" | " << this->reason 
+       << "| Offending Data: " << this->data << endl;
 }

@@ -29,6 +29,7 @@ void readKey(string &line, string &key)
 
 void readstdInput(istream &in, Keys &k, vector<Enemy> &el)
 {
+  Error::currentInput = "cin";
   readEnemysInput(in, k, el);
 }
 
@@ -37,14 +38,12 @@ void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyL
   ifstream inF;
   for (auto f : files)
   {
-    Error::currentFile = f;
+    Error::currentInput = f;
     inF.open(f);
     if (!inF.is_open())
       throw Error("This file failed to open ", f);
 
     readEnemysInput(inF, validKeys, enemyList);
-
-    Error::currentFile = "";
     inF.close();
   }
 }
