@@ -19,6 +19,6 @@ void Error::print()
   }
   else
   {
-    cerr << ": " << this->data << endl;
+    cerr <<" | " << this->reason << "| Offending Data: " << this->data<< endl;
   }
 }
