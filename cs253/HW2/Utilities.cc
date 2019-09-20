@@ -15,51 +15,49 @@ bool isAlphabetic(const string &key)
   return true;
 }
 
-int findNotBlankChar(const string &line)
+size_t findNotBlankChar(const string &line)
 {
   for (size_t i = 0; i < line.length(); i++)
   {
     if (!isspace(line[i]))
     {
-      return static_cast<int>(i);
+      return i;
     }
   }
-  return -1;
+  return string::npos;
 }
 
-int findNotBlankCharReverse(const string &line)
+size_t findNotBlankCharReverse(const string &line)
 {
-  int index = -1;
   if (line.empty())
-    return -1;
+    return string::npos;
 
-  for (auto i = line.length() - 1; i == 0; i--)
+  for (auto i = line.length() - 1; i > 0; i--)
   {
     if (!isspace(line[i]))
     {
-      index = static_cast<int>(i);
-      break;
+      return i;
     }
   }
-  return index;
+  return string::npos;
 }
 
-int findFirstBlankChar(const string &line)
+size_t findFirstBlankChar(const string &line)
 {
 
   for (size_t i = 0; i < line.size(); i++)
   {
     if (isblank(line[i]))
-      return static_cast<int>(i);
+      return i;
   }
-  return -1;
+  return string::npos;
 }
 
 bool isBlankLine(const string &line)
 {
   if (line.empty())
     return true;
-  if (findNotBlankChar(line) >= 0)
+  if (findNotBlankChar(line) != string::npos)
     return false;
 
   return true;
@@ -67,11 +65,11 @@ bool isBlankLine(const string &line)
 
 string trim(const string &line)
 {
-  int index = findNotBlankChar(line);
+  size_t index = findNotBlankChar(line);
 
-  if (index < 0)
+  if (index == string::npos)
     return "";
 
-  int length = findNotBlankCharReverse(line) - index + 1;
+  size_t length = findNotBlankCharReverse(line) - index +1;
   return line.substr(index, length);
 }

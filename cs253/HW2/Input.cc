@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void readEnemysFile(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList)
+void readEnemysInput(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList)
 {
   string line;
   while (getline(inFile, line))
@@ -14,8 +14,8 @@ void readEnemysFile(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList)
 
 void readKey(string &line, string &key)
 {
-  int index = findFirstBlankChar(line);
-  if (index > 0)
+  auto index = findFirstBlankChar(line);
+  if (index != string::npos)
   {
     key = line.substr(0, index);
     line = line.substr(index, line.length() - 1);
@@ -29,7 +29,7 @@ void readKey(string &line, string &key)
 
 void readstdInput(istream &in, Keys &k, vector<Enemy> &el)
 {
-  readEnemysFile(in, k, el);
+  readEnemysInput(in, k, el);
 }
 
 void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyList)
@@ -42,7 +42,7 @@ void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyL
     if (!inF.is_open())
       throw Error("This file failed to open ", f);
 
-    readEnemysFile(inF, validKeys, enemyList);
+    readEnemysInput(inF, validKeys, enemyList);
 
     Error::currentFile = "";
     inF.close();
@@ -85,7 +85,7 @@ Enemy readEnemy(istream &inFile, string &line, Keys &validKeys)
     newEnemy.add(key, value);
   }
 
-  do
+  while (!isBlankLine(line) && inFile)
   {
     if (!isspace(line[0]))
     {
@@ -97,16 +97,19 @@ Enemy readEnemy(istream &inFile, string &line, Keys &validKeys)
       readKey(line, key);
       if (!validKeys.contains(key))
         throw Error("This key is not valid, not in provided key file", key);
-
+      
       value = trim(line);
     }
     else
     {
-      value += " " + trim(line);
+      if (value.empty())
+        value = trim(line);
+      else
+        value += " " + trim(line);
     }
 
     getline(inFile, line);
-  } while (!isBlankLine(line) && inFile);
+  };
 
   if (value.empty())
     throw Error("The value is missing for this key", key);

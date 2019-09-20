@@ -17,7 +17,7 @@ using namespace std;
 
 void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyList);
 void readKey(string &line, string &key);
-void readEnemysFile(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList);
+void readEnemysInput(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList);
 Enemy readEnemy(istream &inFile, string &line, Keys& validKeys);
 Keys readKeyFile(ifstream &inFile, Keys&);
 void readstdInput(istream& in, Keys &k, vector<Enemy> &el);
