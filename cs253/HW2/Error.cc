@@ -15,10 +15,10 @@ void Error::print()
   cerr << "Program: \"" << program_name << "\": ";
   if (currentFile != "")
   {
-    cerr << "Input - File: \"" << currentFile << "\" | " << this->reason << "| Offending Data: " << this->data << endl;
+    cerr << " | Input - File: \"" << currentFile << "\" | " << this->reason << "| Offending Data: " << this->data << endl;
   }
   else
   {
-    cerr <<" | Input:\"cin\" " << this->reason << "| Offending Data: " << this->data<< endl;
+    cerr <<" | Input:\"cin\" | " << this->reason << "| Offending Data: " << this->data<< endl;
   }
 }
