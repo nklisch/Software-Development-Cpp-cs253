@@ -42,6 +42,7 @@ void Enemy::printOthers(ostream &out, bool format = true)
 
 void Enemy::formatOutput(ostream &out, size_t width)
 {
+  out << setw(width) << left;
 }
 
 void Enemy::add(const string &key, const string &value)
