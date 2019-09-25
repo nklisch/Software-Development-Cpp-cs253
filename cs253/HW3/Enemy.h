@@ -29,7 +29,7 @@ class Enemy
 private:
   bool isKeyUnique(const EnemyProperty &prop) const;
   EnemyProperty find(const string &key) const;
-  void Enemy::formatOutput(ostream &out, size_t width);
+  void formatOutput(ostream &out, size_t width);
   size_t findMaxKeyLength(const vector<EnemyProperty> &v);
   EnemyProperty name;
   vector<EnemyProperty> others;
