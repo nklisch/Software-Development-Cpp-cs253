@@ -13,61 +13,55 @@
 #include "Enemy.h"
 
 using namespace std;
-void printEnemyList(vector<Enemy>&);
-void getInput(vector<Enemy> &enemyList, int argc, char * argv[]);
+void printEnemyList(vector<Enemy> &);
+void getInput(vector<Enemy> &enemyList, int argc, char *argv[]);
 
 int main(int argc, char *argv[])
 {
   vector<Enemy> enemyList;
 
-  try{
-  getInput(enemyList, argc, argv); 
+  try
+  {
+    getInput(enemyList, argc, argv);
   }
-  catch(Error e)
+  catch (Error e)
   {
     e.print();
     return 1;
-  } 
+  }
 
   printEnemyList(enemyList);
 
   return 0;
 }
 
-void getInput(vector<Enemy> &enemyList, int argc, char * argv[])
+void getInput(vector<Enemy> &enemyList, int argc, char *argv[])
 {
-  
+
   Error::program_name = argv[0];
 
   string line;
   if (argc == 1)
     throw Error("No Key file provided", "Need a Key File");
-  
-  
 
   ifstream inF = ifstream(argv[1]);
   Error::currentInput = argv[1];
 
   if (!inF.is_open())
-    throw Error("This key file failed to open ", argv[1]);
-  
-  Keys validKeys;
-  
+    throw Error("The key file failed to open ", argv[1]);
 
-  readKeyFile(inF, validKeys);
+  readKeyFile(inF, Enemy::validKeys);
   inF.close();
 
   vector<string> files;
 
-  for(int i = 2; i < argc; i++)
+  for (int i = 2; i < argc; i++)
     files.push_back(argv[i]);
-  
 
   if (argc == 2)
-    readstdInput(cin, validKeys, enemyList);
+    readstdInput(cin, enemyList);
   else
-    readFileInput(files, validKeys, enemyList);
-    
+    readFileInput(files, enemyList);
 }
 
 void printEnemyList(vector<Enemy> &el)
@@ -83,5 +77,3 @@ void printEnemyList(vector<Enemy> &el)
 
   el.back().printEnemy();
 }
-
-

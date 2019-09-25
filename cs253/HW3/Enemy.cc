@@ -2,55 +2,57 @@
 
 using namespace std;
 
-void Enemy::printEnemy(ostream &out)
+void Enemy::printEnemy(ostream &out, bool printN = true, bool printO = true, bool printL = true)
 {
-  formatOutput(out, maxKeyLength);
-  printName(out, false);
-  printOthers(out, false);
-  printLinks(out, false);
+  size_t maxLength = 0;
+  if (printN && name.key.length() > maxLength)
+    maxLength = name.key.length();
+  if (printO && maxOthersLength > maxLength)
+    maxLength = maxOthersLength;
+  if (printL && maxLinksLength > maxLength)
+    maxLength = maxLinksLength;
+
+  out << setw(maxLength) << left;
+
+  if (printN)
+    printName(out);
+  if (printO)
+    printOthers(out);
+  if (printL)
+    printLinks(out);
 }
 
-void Enemy::printName(ostream &out, bool format = true)
+void Enemy::printName(ostream &out)
 {
-  if (format)
-    formatOutput(out, name.key.length());
-
   out << name.key << name.value << "\n";
 }
 
-void Enemy::printLinks(ostream &out, bool format = true)
+void Enemy::printLinks(ostream &out)
 {
-  if (format)
-    formatOutput(out, findMaxKeyLength(links));
-
   for (auto &l : links)
   {
     out << l.key << l.value << "\n";
   }
 }
 
-void Enemy::printOthers(ostream &out, bool format = true)
+void Enemy::printOthers(ostream &out)
 {
-  if (format)
-    formatOutput(out, findMaxKeyLength(others));
-
   for (auto &o : others)
   {
     out << o.key << o.value << "\n";
   }
 }
 
-void Enemy::formatOutput(ostream &out, size_t width)
-{
-  out << setw(width) << left;
-}
-
 void Enemy::add(const string &key, const string &value)
 {
   EnemyProperty p(key, value);
-
+  if (!validKeys.contains(p.key))
+    throw Error("This key is not valid, not in provided key file", key);
   if (!isKeyUnique(p))
     throw Error("Key not unique", key);
+  if (p.value.empty())
+    throw Error("The value is missing for this key", p.key);
+
   if (p.key == "Name")
   {
     name = p;
@@ -58,24 +60,25 @@ void Enemy::add(const string &key, const string &value)
   else if (key.find("Link") != 0)
   {
     links.push_back(p);
+    if (p.key.length() > maxLinksLength)
+      maxLinksLength = p.key.length();
   }
   else
   {
     others.push_back(p);
+    if (p.key.length() > maxOthersLength)
+      maxLinksLength = p.key.length();
   }
-
-  if (p.key.length() > maxKeyLength)
-    maxKeyLength = p.key.length();
 }
 
-size_t Enemy::findMaxKeyLength(const vector<EnemyProperty> &v)
+string Enemy::toString()
 {
-  size_t max = 0;
-  for (auto &s : v)
-  {
-    if (s.key.length() > max)
-      max = s.key.length();
-  }
+  string s(name.key + " " + name.value);
+  for (auto &l : links)
+    s += "\n" + l.key + " " + l.value;
+  for (auto &o : others)
+    s += "\n" + o.key + " " + o.value;
+  return s;
 }
 
 bool Enemy::hasName()

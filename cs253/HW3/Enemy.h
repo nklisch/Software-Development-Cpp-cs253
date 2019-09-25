@@ -27,26 +27,28 @@ class Enemy
 {
 public:
   Enemy() = default;
-  void printEnemy(ostream &out);
-  void printName(ostream &out, bool format = true);
-  void printLinks(ostream &out, bool format = true);
-  void printOthers(ostream &out, bool format = true);
+  void printEnemy(ostream &out, bool printName = true, bool printOthers = true, bool printLinks = true);
   bool hasName();
   //Valid alphabetic key and properly formatted value
   //Only checks for uniqueness
   void add(const string &key, const string &value);
   bool empty();
+  string toString();
+  static Keys validKeys;
 
 private:
-  bool isKeyUnique(const EnemyProperty &prop) const;
-  EnemyProperty find(const string &key) const;
-  void formatOutput(ostream &out, size_t width);
-  size_t findMaxKeyLength(const vector<EnemyProperty> &v);
   EnemyProperty name;
   vector<EnemyProperty> others;
   vector<EnemyProperty> links;
-  size_t maxKeyLength = 0;
+  size_t maxLinksLength = 0;
+  size_t maxOthersLength = 0;
   int size = 0;
+  void printName(ostream &out);
+  void printLinks(ostream &out);
+  void printOthers(ostream &out);
+  bool isKeyUnique(const EnemyProperty &prop) const;
+  EnemyProperty find(const string &key) const;
+  size_t findMaxKeyLength(const vector<EnemyProperty> &v);
 };
 
 #endif

@@ -13,13 +13,12 @@
 #include "Keys.h"
 
 using namespace std;
-//Reads input from std Input using
 
-void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyList);
+void readFileInput(vector<string> &files, vector<Enemy> &enemyList);
 void readKey(string &line, string &key);
-void readEnemysInput(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList);
-Enemy readEnemy(istream &inFile, string &line, Keys &validKeys);
-Keys readKeyFile(ifstream &inFile, Keys &);
-void readstdInput(istream &in, Keys &k, vector<Enemy> &el);
+void readEnemysInput(istream &inFile, vector<Enemy> &enemyList);
+Enemy readEnemy(istream &inFile, string &line);
+void readKeyFile(ifstream &inFile, Keys &k);
+void readstdInput(istream &in, vector<Enemy> &el);
 
 #endif

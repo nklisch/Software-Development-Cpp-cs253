@@ -2,13 +2,13 @@
 
 using namespace std;
 
-void readEnemysInput(istream &inFile, Keys &validKeys, vector<Enemy> &enemyList)
+void readEnemysInput(istream &input, vector<Enemy> &enemyList)
 {
   string line;
-  while (getline(inFile, line))
+  while (getline(input, line))
   {
     if (!isBlankLine(line))
-      enemyList.push_back(readEnemy(inFile, line, validKeys));
+      enemyList.push_back(readEnemy(input, line));
   }
 }
 
@@ -27,13 +27,13 @@ void readKey(string &line, string &key)
   }
 }
 
-void readstdInput(istream &in, Keys &k, vector<Enemy> &el)
+void readstdInput(istream &in, vector<Enemy> &el)
 {
   Error::currentInput = "cin";
-  readEnemysInput(in, k, el);
+  readEnemysInput(in, el);
 }
 
-void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyList)
+void readFileInput(vector<string> &files, vector<Enemy> &enemyList)
 {
   ifstream inF;
   for (auto f : files)
@@ -43,27 +43,36 @@ void readFileInput(vector<string> &files, Keys &validKeys, vector<Enemy> &enemyL
     if (!inF.is_open())
       throw Error("This file failed to open ", f);
 
-    readEnemysInput(inF, validKeys, enemyList);
+    readEnemysInput(inF, enemyList);
     inF.close();
   }
 }
 
-Keys readKeyFile(ifstream &inFile, Keys &k)
+void readLine(istream &input, string &line, string &value)
+{
+  while (!isspace(line[0]) && input)
+  {
+    if (value.empty())
+      value = trim(line);
+    else
+      value += " " + trim(line);
+    getline(input, line);
+  }
+}
+
+void readKeyFile(ifstream &input, Keys &k)
 {
   string key;
   string line;
-  while (getline(inFile, line))
+  while (getline(input, line))
   {
-    if (!isBlankLine(line))
-    {
-      readKey(line, key);
+    key = trim(line);
+    if (!line.empty())
       k.add(key);
-    }
   }
-  return k;
 }
 
-Enemy readEnemy(istream &inFile, string &line, Keys &validKeys)
+Enemy readEnemy(istream &input, string &line)
 {
   string key;
   string value;
@@ -71,49 +80,15 @@ Enemy readEnemy(istream &inFile, string &line, Keys &validKeys)
   if (isspace(line[0]))
     throw Error("The key is missing for this line", line);
 
-  readKey(line, key);
-  if (!validKeys.contains(key))
-    throw Error("This key is not valid, not in provided key file", key);
-
-  value = trim(line);
-
-  if (!getline(inFile, line))
+  while (input && !isBlankLine(line))
   {
-    if (value.empty())
-      throw Error("The value is missing for this key", key);
+    readKey(line, key);
+    readLine(input, line, value);
     newEnemy.add(key, value);
   }
 
-  while (!isBlankLine(line) && inFile)
-  {
-    if (!isspace(line[0]))
-    {
-      if (value.empty())
-        throw Error("The value is missing for this key", key);
-
-      newEnemy.add(key, value);
-
-      readKey(line, key);
-      if (!validKeys.contains(key))
-        throw Error("This key is not valid, not in provided key file", key);
-      
-      value = trim(line);
-    }
-    else
-    {
-      if (value.empty())
-        value = trim(line);
-      else
-        value += " " + trim(line);
-    }
-
-    getline(inFile, line);
-  };
-
-  if (value.empty())
-    throw Error("The value is missing for this key", key);
-
-  newEnemy.add(key, value);
+  if (!newEnemy.hasName())
+    throw Error("The enemy is missing it's name", newEnemy.toString());
 
   return newEnemy;
 }
