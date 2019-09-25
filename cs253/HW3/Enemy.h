@@ -29,17 +29,21 @@ class Enemy
 private:
   bool isKeyUnique(const EnemyProperty &prop) const;
   EnemyProperty find(const string &key) const;
-  void addName(const string &n);
-  void addLink(const string &l, const string &v);
-  int maxCharLength = 0;
+  void Enemy::formatOutput(ostream &out, size_t width);
+  size_t findMaxKeyLength(const vector<EnemyProperty> &v);
   EnemyProperty name;
-  vector<EnemyProperty> properties;
+  vector<EnemyProperty> others;
   vector<EnemyProperty> links;
+  size_t maxKeyLength = 0;
   int size = 0;
 
 public:
   Enemy() = default;
-  void printEnemy();
+  void printEnemy(ostream &out);
+  void printName(ostream &out, bool format = true);
+  void printLinks(ostream &out, bool format = true);
+  void printOthers(ostream &out, bool format = true);
+  bool hasName();
   //Valid alphabetic key and properly formatted value
   //Only checks for uniqueness
   void add(const string &key, const string &value);

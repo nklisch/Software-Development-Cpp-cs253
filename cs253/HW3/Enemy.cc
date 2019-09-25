@@ -1,35 +1,85 @@
 #include "Enemy.h"
 
 using namespace std;
-// Use a map, and a key list in the enemy, to print out the values correctly and check for valid keys// Make the keys a static value?
 
-void Enemy::printEnemy()
+void Enemy::printEnemy(ostream &out)
 {
-  //for (size_t i = 0; i < this->myKeys.size(); i++)
-  //{
-  // cout << setw(maxCharLength + 1) << left;
-  //  cout << myKeys[i] << values[i] << "\n";
-  //}
+  formatOutput(out, maxKeyLength);
+  printName(out, false);
+  printOthers(out, false);
+  printLinks(out, false);
+}
+
+void Enemy::printName(ostream &out, bool format = true)
+{
+  if (format)
+    formatOutput(out, name.key.length());
+
+  out << name.key << name.value << "\n";
+}
+
+void Enemy::printLinks(ostream &out, bool format = true)
+{
+  if (format)
+    formatOutput(out, findMaxKeyLength(links));
+
+  for (auto &l : links)
+  {
+    out << l.key << l.value << "\n";
+  }
+}
+
+void Enemy::printOthers(ostream &out, bool format = true)
+{
+  if (format)
+    formatOutput(out, findMaxKeyLength(others));
+
+  for (auto &o : others)
+  {
+    out << o.key << o.value << "\n";
+  }
+}
+
+void Enemy::formatOutput(ostream &out, size_t width)
+{
 }
 
 void Enemy::add(const string &key, const string &value)
 {
-  if (key == "Name")
+  EnemyProperty p(key, value);
+
+  if (!isKeyUnique(p))
+    throw Error("Key not unique", key);
+  if (p.key == "Name")
   {
-    addName(key);
+    name = p;
   }
-  else if (key.find_first_of)
+  else if (key.find("Link") != 0)
+  {
+    links.push_back(p);
+  }
+  else
+  {
+    others.push_back(p);
+  }
+
+  if (p.key.length() > maxKeyLength)
+    maxKeyLength = p.key.length();
 }
 
-void Enemy::addName(const string &n)
+size_t Enemy::findMaxKeyLength(const vector<EnemyProperty> &v)
 {
-  name.key = "Name";
-  name.value = n;
+  size_t max = 0;
+  for (auto &s : v)
+  {
+    if (s.key.length() > max)
+      max = s.key.length();
+  }
 }
 
-void Enemy::addLink(const string &l, const string &v)
+bool Enemy::hasName()
 {
-  links.push_back(EnemyProperty(l, v));
+  return !name.empty();
 }
 
 bool Enemy::empty()
@@ -46,7 +96,7 @@ EnemyProperty Enemy::find(const string &key) const
 {
   if (key == name.key)
     return name;
-  for (auto &p : properties)
+  for (auto &p : others)
   {
     if (key == p.key)
       return p;

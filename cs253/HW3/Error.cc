@@ -11,7 +11,7 @@ void Error::set(const string &r, const string &d)
 
 void Error::print()
 {
-  cerr << "Program: \"" << program_name << "\": " 
-       << " | Input: \"" << currentInput << "\" | " << this->reason 
-       << "| Offending Data: " << this->data << endl;
+  cerr << "Program: \"" << program_name << "\": "
+       << " | Input: \"" << currentInput << "\" | " << reason
+       << "| Offending Data: " << data << endl;
 }

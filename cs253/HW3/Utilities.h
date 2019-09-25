@@ -1,7 +1,7 @@
 #ifndef Utilities_h
 #define Utilities_h
 #include <string>
-#include <string>
+#include <vector>
 #include <cctype>
 #include <iostream>
 #include <algorithm>
@@ -17,6 +17,4 @@ size_t findFirstBlankChar(const string &);
 bool isBlankLine(const string &);
 bool isAlphabetic(const string &);
 string trim(const string &);
-template <class T>
-bool contains(vector<T> &v, T &e);
 #endif
