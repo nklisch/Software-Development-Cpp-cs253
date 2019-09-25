@@ -25,18 +25,6 @@ struct EnemyProperty
 
 class Enemy
 {
-
-private:
-  bool isKeyUnique(const EnemyProperty &prop) const;
-  EnemyProperty find(const string &key) const;
-  void formatOutput(ostream &out, size_t width);
-  size_t findMaxKeyLength(const vector<EnemyProperty> &v);
-  EnemyProperty name;
-  vector<EnemyProperty> others;
-  vector<EnemyProperty> links;
-  size_t maxKeyLength = 0;
-  int size = 0;
-
 public:
   Enemy() = default;
   void printEnemy(ostream &out);
@@ -48,6 +36,17 @@ public:
   //Only checks for uniqueness
   void add(const string &key, const string &value);
   bool empty();
+
+private:
+  bool isKeyUnique(const EnemyProperty &prop) const;
+  EnemyProperty find(const string &key) const;
+  void formatOutput(ostream &out, size_t width);
+  size_t findMaxKeyLength(const vector<EnemyProperty> &v);
+  EnemyProperty name;
+  vector<EnemyProperty> others;
+  vector<EnemyProperty> links;
+  size_t maxKeyLength = 0;
+  int size = 0;
 };
 
 #endif

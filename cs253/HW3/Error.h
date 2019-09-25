@@ -7,10 +7,6 @@ using namespace std;
 
 class Error
 {
-private:
-  string reason = "Default Error";
-  string data = "";
-
 public:
   Error() = default;
   Error(const string &r, const string &d) : reason(r), data(d){};
@@ -18,5 +14,9 @@ public:
   void print();
   static string program_name;
   static string currentInput;
+
+private:
+  string reason = "Default Error";
+  string data = "";
 };
 #endif
