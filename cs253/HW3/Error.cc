@@ -9,9 +9,10 @@ void Error::set(const string &r, const string &d)
   data = d;
 }
 
-void Error::print()
+ostream &
+operator<<(ostream &os, const Error &e)
 {
-  cerr << "Program: \"" << program_name << "\": "
-       << " | Input: \"" << currentInput << "\" | " << reason
-       << "| Offending Data: " << data << endl;
+  return os << "Program: \"" << Error::program_name << "\": "
+            << " | Input: \"" << Error::currentInput << "\" | " << e.getReason()
+            << "| Offending Data: " << e.getData() << endl;
 }

@@ -2,7 +2,9 @@
 
 using namespace std;
 
-void Enemy::printEnemy(ostream &out, bool printN = true, bool printO = true, bool printL = true)
+Keys Enemy::validKeys;
+
+void Enemy::printEnemy(ostream &out, bool printN, bool printO, bool printL)
 {
   size_t maxLength = 0;
   if (printN && name.key.length() > maxLength)
@@ -22,12 +24,12 @@ void Enemy::printEnemy(ostream &out, bool printN = true, bool printO = true, boo
     printLinks(out);
 }
 
-void Enemy::printName(ostream &out)
+void Enemy::printName(ostream &out) const
 {
   out << name.key << name.value << "\n";
 }
 
-void Enemy::printLinks(ostream &out)
+void Enemy::printLinks(ostream &out) const
 {
   for (auto &l : links)
   {
@@ -35,7 +37,7 @@ void Enemy::printLinks(ostream &out)
   }
 }
 
-void Enemy::printOthers(ostream &out)
+void Enemy::printOthers(ostream &out) const
 {
   for (auto &o : others)
   {
@@ -71,7 +73,7 @@ void Enemy::add(const string &key, const string &value)
   }
 }
 
-string Enemy::toString()
+string Enemy::toString() const
 {
   string s(name.key + " " + name.value);
   for (auto &l : links)
@@ -81,12 +83,12 @@ string Enemy::toString()
   return s;
 }
 
-bool Enemy::hasName()
+bool Enemy::hasName() const
 {
   return !name.empty();
 }
 
-bool Enemy::empty()
+bool Enemy::empty() const
 {
   return size == 0;
 }
@@ -110,6 +112,5 @@ EnemyProperty Enemy::find(const string &key) const
     if (key == l.key)
       return l;
   }
-  EnemyProperty p;
-  return p;
+  return EnemyProperty();
 }

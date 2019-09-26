@@ -29,7 +29,8 @@ size_t findNotBlankChar(const string &line)
 
 size_t findNotBlankCharReverse(const string &line)
 {
-  for (size_t i = line.length() - 1; i >= 0; i--)
+
+  for (size_t i = line.length() - 1; i != string::npos; i--)
   {
     if (!isspace(line[i]))
     {

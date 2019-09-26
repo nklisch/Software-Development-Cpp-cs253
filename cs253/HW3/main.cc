@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <getopt.h>
 #include "Error.h"
 #include "Input.h"
 #include "Keys.h"
@@ -13,67 +14,105 @@
 #include "Enemy.h"
 
 using namespace std;
-void printEnemyList(vector<Enemy> &);
-void getInput(vector<Enemy> &enemyList, int argc, char *argv[]);
+struct PrintFlags
+{
+  bool printName = false, printOthers = false, printLinks = false;
+  bool allFalse() const { return !printName && !printOthers && !printLinks; }
+  void setAllTrue() { printName = true, printLinks = true, printOthers = true; }
+};
+
+void printEnemyList(vector<Enemy> &, PrintFlags flags);
+PrintFlags getInput(vector<Enemy> &enemyList, int argc, char *argv[]);
+PrintFlags getOptions(const int argc, char *argv[], string &keyfile);
 
 int main(int argc, char *argv[])
 {
   vector<Enemy> enemyList;
-
+  PrintFlags flags;
   try
   {
-    getInput(enemyList, argc, argv);
+    flags = getInput(enemyList, argc, argv);
   }
   catch (Error e)
   {
-    e.print();
+    cerr << e;
     return 1;
   }
 
-  printEnemyList(enemyList);
+  printEnemyList(enemyList, flags);
 
   return 0;
 }
 
-void getInput(vector<Enemy> &enemyList, int argc, char *argv[])
+PrintFlags getOptions(const int argc, char *argv[], string &keyFile)
 {
+  PrintFlags flags;
 
-  Error::program_name = argv[0];
-
-  string line;
-  if (argc == 1)
+  int option;
+  while ((option = getopt(argc, argv, "nlok:")))
+  {
+    switch (option)
+    {
+    case 'n':
+      flags.printName = true;
+      break;
+    case 'l':
+      flags.printLinks = true;
+      break;
+    case 'o':
+      flags.printOthers = true;
+      break;
+    case 'k':
+      keyFile = optarg;
+      break;
+    default:
+      throw Error("Invalid option given", "");
+    }
+  }
+  if (keyFile.empty())
     throw Error("No Key file provided", "Need a Key File");
 
-  ifstream inF = ifstream(argv[1]);
-  Error::currentInput = argv[1];
+  if (flags.allFalse())
+    flags.setAllTrue();
+  return flags;
+}
+
+PrintFlags getInput(vector<Enemy> &enemyList, const int argc, char *argv[])
+{
+  Error::program_name = argv[0];
+  string keyFile;
+  PrintFlags flags = getOptions(argc, argv, keyFile);
+  ifstream inF = ifstream(keyFile);
+  Error::currentInput = keyFile;
 
   if (!inF.is_open())
-    throw Error("The key file failed to open ", argv[1]);
+    throw Error("The key file failed to open ", keyFile);
 
   readKeyFile(inF, Enemy::validKeys);
   inF.close();
 
-  vector<string> files;
-
-  for (int i = 2; i < argc; i++)
-    files.push_back(argv[i]);
-
-  if (argc == 2)
+  if (optind >= argc)
     readstdInput(cin, enemyList);
   else
+  {
+    vector<string> files;
+    for (int i = optind; i < argc; i++)
+      files.push_back(argv[i]);
+
     readFileInput(files, enemyList);
+  }
+  return flags;
 }
 
-void printEnemyList(vector<Enemy> &el)
+void printEnemyList(vector<Enemy> &el, PrintFlags flags)
 {
   if (el.empty())
     return;
 
   for (size_t i = 0; i < el.size() - 1; i++)
   {
-    el[i].printEnemy();
+    el[i].printEnemy(cout, flags.printName, flags.printOthers, flags.printLinks);
     cout << '\n';
   }
-
-  el.back().printEnemy();
+  el.back().printEnemy(cout, flags.printName, flags.printOthers, flags.printLinks);
 }
