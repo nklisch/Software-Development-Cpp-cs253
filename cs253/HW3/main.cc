@@ -49,7 +49,7 @@ PrintFlags getOptions(const int argc, char *argv[], string &keyFile)
   PrintFlags flags;
 
   int option;
-  while ((option = getopt(argc, argv, "nlok:")))
+  while ((option = getopt(argc, argv, "nlok:")) != -1)
   {
     switch (option)
     {
@@ -65,8 +65,10 @@ PrintFlags getOptions(const int argc, char *argv[], string &keyFile)
     case 'k':
       keyFile = optarg;
       break;
-    default:
+    case '?':
       throw Error("Invalid option given", "");
+    default:
+      break;
     }
   }
   if (keyFile.empty())

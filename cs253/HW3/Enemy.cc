@@ -13,34 +13,35 @@ void Enemy::printEnemy(ostream &out, bool printN, bool printO, bool printL)
     maxLength = maxOthersLength;
   if (printL && maxLinksLength > maxLength)
     maxLength = maxLinksLength;
-
-  out << setw(maxLength) << left;
-
+  out << left;
   if (printN)
-    printName(out);
+    printName(out, maxLength);
   if (printO)
-    printOthers(out);
+    printOthers(out, maxLength);
   if (printL)
-    printLinks(out);
+    printLinks(out, maxLength);
 }
 
-void Enemy::printName(ostream &out) const
+void Enemy::printName(ostream &out, int maxLength) const
 {
+  out << setw(maxLength + 1);
   out << name.key << name.value << "\n";
 }
 
-void Enemy::printLinks(ostream &out) const
+void Enemy::printLinks(ostream &out, int maxLength) const
 {
   for (auto &l : links)
   {
+    out << setw(maxLength + 1);
     out << l.key << l.value << "\n";
   }
 }
 
-void Enemy::printOthers(ostream &out) const
+void Enemy::printOthers(ostream &out, int maxLength) const
 {
   for (auto &o : others)
   {
+    out << setw(maxLength + 1);
     out << o.key << o.value << "\n";
   }
 }
@@ -59,7 +60,7 @@ void Enemy::add(const string &key, const string &value)
   {
     name = p;
   }
-  else if (key.find("Link") != 0)
+  else if (key.find("Link") != string::npos)
   {
     links.push_back(p);
     if (p.key.length() > maxLinksLength)
@@ -69,7 +70,7 @@ void Enemy::add(const string &key, const string &value)
   {
     others.push_back(p);
     if (p.key.length() > maxOthersLength)
-      maxLinksLength = p.key.length();
+      maxOthersLength = p.key.length();
   }
 }
 

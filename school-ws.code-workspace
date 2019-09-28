@@ -13,7 +13,9 @@
 			"vector": "cpp",
 			"*.tcc": "cpp",
 			"istream": "cpp",
-			"fstream": "cpp"
+			"fstream": "cpp",
+			"array": "cpp",
+			"string_view": "cpp"
 		}
 	},
 	"extensions": {

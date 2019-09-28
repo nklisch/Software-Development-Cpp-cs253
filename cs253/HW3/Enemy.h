@@ -40,9 +40,9 @@ private:
   size_t maxLinksLength = 0;
   size_t maxOthersLength = 0;
   int size = 0;
-  void printName(ostream &out) const;
-  void printLinks(ostream &out) const;
-  void printOthers(ostream &out) const;
+  void printName(ostream &out, int maxLength) const;
+  void printLinks(ostream &out, int maxLength) const;
+  void printOthers(ostream &out, int maxLength) const;
   bool isKeyUnique(const EnemyProperty &prop) const;
   EnemyProperty find(const string &key) const;
   size_t findMaxKeyLength(const vector<EnemyProperty> &v);

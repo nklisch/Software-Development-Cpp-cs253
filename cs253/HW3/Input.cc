@@ -23,7 +23,7 @@ void readKey(string &line, string &key)
   else
   {
     key = line;
-    line.clear();
+    line = " ";
   }
 }
 
@@ -48,9 +48,9 @@ void readFileInput(vector<string> &files, vector<Enemy> &enemyList)
   }
 }
 
-void readLine(istream &input, string &line, string &value)
+void readValue(istream &input, string &line, string &value)
 {
-  while (!isspace(line[0]) && input)
+  while (input && isspace(line[0]))
   {
     if (value.empty())
       value = trim(line);
@@ -83,8 +83,10 @@ Enemy readEnemy(istream &input, string &line)
   while (input && !isBlankLine(line))
   {
     readKey(line, key);
-    readLine(input, line, value);
+    readValue(input, line, value);
     newEnemy.add(key, value);
+    value.clear();
+    key.clear();
   }
 
   if (!newEnemy.hasName())

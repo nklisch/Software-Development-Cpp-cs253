@@ -20,5 +20,6 @@ void readEnemysInput(istream &inFile, vector<Enemy> &enemyList);
 Enemy readEnemy(istream &inFile, string &line);
 void readKeyFile(ifstream &inFile, Keys &k);
 void readstdInput(istream &in, vector<Enemy> &el);
+void readValue(istream &input, string &line, string &value);
 
 #endif
