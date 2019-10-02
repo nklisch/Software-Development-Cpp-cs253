@@ -17,7 +17,7 @@ cmake_minimum_required(VERSION 3.14)
 
     # add_compile_options must be BEFORE add_executable.
     # Create the executable hw0 from the source file hw0.cc:
-    add_executable(main main.cc Enemy.cc Error.cc Input.cc Utilities.cc Keys.cc)
+    add_executable(hw3 main.cc Enemy.cc Error.cc Input.cc Utilities.cc Keys.cc)
 
     # Create a tar file every time:
     add_custom_target(hw3.tar ALL COMMAND tar cf hw3.tar ./*.cc ./*.h ./CMakeLists.txt)
