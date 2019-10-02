@@ -65,7 +65,9 @@ bool isBlankLine(const string &line)
 
 string trim(const string &line)
 {
-  size_t index = findNotBlankChar(line);
+   
+  auto index = 'v';
+  index = findNotBlankChar(line);
 
   if (index == string::npos)
     return "";
