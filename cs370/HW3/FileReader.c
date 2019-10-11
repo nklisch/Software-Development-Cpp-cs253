@@ -13,8 +13,9 @@
 int main(const int argc, const char *argv[])
 {
 	const char *filename = argv[1];
+	//Convert the filedescriptor for the write end of the pipe
 	int writeEnd = atoi(argv[2]);
-
+	//Open the file
 	char valuesBuff[60000];
 	FILE *input = fopen(filename, "r");
 	if (input == NULL)
@@ -22,6 +23,7 @@ int main(const int argc, const char *argv[])
 		fprintf(stderr, "File Failed to open");
 	}
 	
+	//Read values into a buffer from file
 	char line[2000];
 	for (int i = 0; i < 76; i++)
 	{
@@ -29,6 +31,7 @@ int main(const int argc, const char *argv[])
 		strcat(valuesBuff, line);
 	}
 	fclose(input);
+	//Write buffer to pipe
 	write(writeEnd, valuesBuff, 60000);
 	close(writeEnd);
 	return 0;

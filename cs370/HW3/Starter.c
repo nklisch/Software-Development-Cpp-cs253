@@ -25,6 +25,7 @@ int main(const int argc, const char *argv[])
     if (argc >= 2)
         strcat(filename, argv[1]);
 
+    //Make my pipe
     int myPipe[2];
     if (pipe(myPipe) < 0)
     {
@@ -34,6 +35,7 @@ int main(const int argc, const char *argv[])
     char fileDescriptor[200];
     sprintf(fileDescriptor, "%d", myPipe[1]);
 
+    //Fork for FileReader Processes
     pid_t my_pid = fork();
     char fileData[BUFFER_SIZE];
 
@@ -44,17 +46,22 @@ int main(const int argc, const char *argv[])
     }
     if (my_pid == 0)
     {
+        //Child Process
+        //Execute FileReader with the correct fileDescriptor
         execlp("./FileReader", "FileReader.c", filename, fileDescriptor, NULL);
     }
     else if(my_pid > 0)
     {
+        //Parent Process
+        //Wait for fileReader, then read info from pipe
         wait(&status);
         close(myPipe[1]);
         read(myPipe[0], fileData, sizeof(fileData));
         close(myPipe[0]);
     }
-    char *coded_values[5778];
 
+    //This section parses FileReaders output into codedvalues
+    char *coded_values[5778];
     char s[3] = " \n";
     coded_values[5777] = NULL;
     char  *p;
@@ -64,20 +71,22 @@ int main(const int argc, const char *argv[])
     {
         p = strtok(NULL, s);
         coded_values[i] = p;
-        //printf("%s ", p);
-        //printf("index: %d\n", i);
     }
 
+    //Create array for the Pids of the three proccesses that will be run
+    //Also array of character pointers and the colors for the processes
     pid_t pids[3];
     char *shmPs[3];
     char *colors[3] = {"Red",
                        "Green",
                        "Blue"};
 
+    //Calls he function that forks the correct child process
     for (int i = 0; i < 3; i++)
     {
         pids[i] = decodeValue(coded_values, colors[i], &shmPs[i]);
     }
+    //Waits for each child process
     for (int i = 0; i < 3; i++)
     {
         int status;
@@ -87,7 +96,7 @@ int main(const int argc, const char *argv[])
     int red[SIZE];
     int green[SIZE];
     int blue[SIZE];
-
+    //Reads values into red, green and blue arrays
     readValues(shmPs[0], red);
     readValues(shmPs[1], green);
     readValues(shmPs[2], blue);
@@ -117,6 +126,7 @@ int main(const int argc, const char *argv[])
 
 pid_t decodeValue(char *coded_values[], char color[], char **smPointer)
 {
+    //Open shared memory space
     char sharedMemory[100] = "Shared_mem_";
     strcat(sharedMemory, color);
     char file[15] = "./";
@@ -125,6 +135,7 @@ pid_t decodeValue(char *coded_values[], char color[], char **smPointer)
     int fd = shm_open(sharedMemory, O_CREAT | O_RDWR, 0666);
     ftruncate(fd, BUFFER_SIZE);
     *smPointer = (char *)mmap(0, BUFFER_SIZE, PROT_READ, MAP_SHARED, fd, 0);
+    //Create Child Process
     pid_t my_pid = fork();
     if (my_pid < 0)
     {
@@ -133,6 +144,7 @@ pid_t decodeValue(char *coded_values[], char color[], char **smPointer)
     }
     else if (my_pid == 0)
     {
+        //Run correct process based on pased color
         execvp(file, coded_values);
     }
     return my_pid;
@@ -140,8 +152,10 @@ pid_t decodeValue(char *coded_values[], char color[], char **smPointer)
 
 void readValues(char *shm_values, int output[])
 {
+    //Copy values into a buffer
     char buffer[60000];
     strcat(buffer, shm_values);
+    //Read values from buffer and put into output array
     char s[2] = " ";
     char *t = strtok(buffer,s);
     output[0] = atoi(t);
@@ -149,7 +163,6 @@ void readValues(char *shm_values, int output[])
     {
         t = strtok(NULL,s);
         output[i] = atoi(t);
-        fflush(stdout);
     }
     return;
 }

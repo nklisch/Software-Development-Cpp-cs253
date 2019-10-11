@@ -32,4 +32,4 @@ $(C_OBJS):${C_HEADERS}
 clean:
 	rm -f *.o *~$(EXE)$(EXE1)$(EXE2)$(EXE3)$(EXE4)
 packadge:
-	tar -cvzf Nathan-Klisch-HW2.tar *.c *.txt Makefile
+	tar -cvzf Nathan-Klisch-HW3.tar *.c *.txt Makefile
