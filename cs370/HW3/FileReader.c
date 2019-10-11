@@ -7,7 +7,9 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
-
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <sys/ipc.h>
 int main(const int argc, const char *argv[])
 {
 	const char *filename = argv[1];

@@ -7,6 +7,9 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <sys/ipc.h>
 
 pid_t decodeValue(char *[], char[], char *smPointer);
 void readValues(char *, int[]);
@@ -36,7 +39,7 @@ int main(const int argc, const char *argv[])
 
     if (my_pid < 0)
     {
-        //fprintf(stderr, "Fork Failed");
+        fprintf(stderr, "Fork Failed");
         return 2;
     }
     else if (my_pid == 0)
@@ -58,8 +61,6 @@ int main(const int argc, const char *argv[])
     {
         coded_values[i] = strtok(fileData, s);
     }
-
-    shm_open();
     pid_t pids[3];
     char *shmPs[3];
     char *colors[3] = {"Red",
@@ -116,13 +117,12 @@ pid_t decodeValue(char *coded_values[], char color[], char *smPointer)
     coded_values[5776] = sharedMemory;
     int fd = shm_open(sharedMemory, O_CREAT | O_RDWR, 0666);
     ftruncate(fd, BUFFER_SIZE);
-    smPointer = (int *)mmap(0, BUFFER_SIZE, PROT_READ, MAP_SHARED, fd, 0);
+    smPointer = (char *)mmap(0, BUFFER_SIZE, PROT_READ, MAP_SHARED, fd, 0);
 
     pid_t pid = fork();
-    int status;
     if (pid < 0)
     {
-        sprintf(stderr, "Fork Failed");
+        fprintf(stderr, "Fork Failed");
         exit(1);
     }
     else if (pid == 0)
@@ -141,7 +141,7 @@ void readValues(char *shm_values, int output[])
 {
     for (int i = 0; i < 5776; i++)
     {
-        sscanf(shm_values, "%d", output[i]);
+        sscanf(shm_values, "%d", &output[i]);
     }
     return;
 }
