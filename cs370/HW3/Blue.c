@@ -21,16 +21,18 @@ int main(const int argc, const char *argv[])
     char buffer[60000];
     for (int i = 0; i < 5776; i++)
     {
+        char val[20];
         //Convert argument to integer
-        sscanf(coded_values[i], "%d", &value);
-        value = value & 0xFF; //Isolate color
-        sprintf(buffer, "%d", value);
-        if (i < 5775)
-            strcat(buffer, " ");
+        value = atoi(argv[i]);
+        value = (value) & 0xFF; //Isolate color
+        sprintf(val, "%d ", value);
+        strcat(buffer, val);
     }
+    
     strcat(smPointer, buffer);
     pid_t pid = getpid();
     printf("Blue[%d]: Received coded value %d\n", pid, value);
     printf("Blue[%d]: Decoded into %d\n", pid, value);
-    exit(value); //Return result
+    shm_unlink(coded_values[5776]);
+    return 0;
 }

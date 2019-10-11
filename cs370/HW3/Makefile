@@ -10,8 +10,8 @@ EXE3 = Blue
 EXE4 = FileReader
 #Complier Options
 GCC = gcc
-GCC_FLAGS = -std=gnu99 -g -Wall -c -lrt
-LD_FLAGS = -std=gnu99 -g -Wall -lrt
+GCC_FLAGS = -std=gnu99 -g -Wall -c -lrt -g
+LD_FLAGS = -std=gnu99 -g -Wall -lrt -g
 #compile
 .c.o:
 	$(GCC) $(GCC_FLAGS) $<

@@ -21,12 +21,11 @@ int main(const int argc, const char *argv[])
 	{
 		fprintf(stderr, "File Failed to open");
 	}
-
-	char line[500];
+	
+	char line[2000];
 	for (int i = 0; i < 76; i++)
 	{
-		fgets(line, 500, input);
-		strcat(valuesBuff, " ");
+		fgets(line, 2000, input);
 		strcat(valuesBuff, line);
 	}
 	fclose(input);

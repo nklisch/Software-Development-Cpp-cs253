@@ -20,18 +20,21 @@ int main(const int argc, const char *argv[])
     ftruncate(fd, size);
     char *smPointer = (char *)mmap(0, size, PROT_WRITE, MAP_SHARED, fd, 0);
     char buffer[60000];
-    for (int i = 0; i < 5776; i++)
+
+     for (int i = 0; i < 5776; i++)
     {
+        char val[20];
         //Convert argument to integer
-        sscanf(coded_values[i], "%d", &value);
+        value = atoi(argv[i]);
         value = (value >> 8) & 0xFF; //Isolate color
-        sprintf(buffer, "%d", value);
-        if (i < 5775)
-            strcat(buffer, " ");
+        sprintf(val, "%d ", value);
+        strcat(buffer, val);
     }
+    
     strcat(smPointer, buffer);
     pid_t pid = getpid();
     printf("Green[%d]: Received coded value %d\n", pid, value);
     printf("Green[%d]: Decoded into %d\n", pid, value);
-    exit(value); //Return result
+    shm_unlink(coded_values[5776]);
+    return 0; 
 }
