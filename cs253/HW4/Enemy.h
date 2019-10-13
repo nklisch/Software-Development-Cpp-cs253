@@ -15,7 +15,7 @@ struct EnemyProperty
   string value;
   EnemyProperty() = default;
   EnemyProperty(const string &k, const string &v) : key(k), value(v){};
-  bool empty() { return key.empty(); }
+  bool empty() const { return key.empty(); }
   void clear()
   {
     key.clear();
@@ -48,7 +48,7 @@ private:
   bool showName = true;
   bool showOther = true;
   bool showLink = true;
-  mutable EnemyProperty name;
+  EnemyProperty name;
   vector<EnemyProperty> others;
   vector<EnemyProperty> links;
   size_t maxLinksLength = 0;
