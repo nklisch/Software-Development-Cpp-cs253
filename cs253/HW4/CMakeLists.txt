@@ -17,9 +17,9 @@ add_compile_options(-Wunused-const-variable=1 -Wzero-as-null-pointer-constant)
 
 # add_compile_options must be BEFORE add_executable or add_library.
 
-add_library(libhw4 Enemy.cc Keys.cc)
+add_library(libhw4 Enemy.cc Keys.cc Utilities.cc)
 add_executable(test test.cc)
-target_link_libraries(test hw4)
+target_link_libraries(test libhw4)
 
 # Create a tar file every time:
 add_custom_target(hw4.tar ALL COMMAND tar cf hw4.tar *.cc *.h CMakeLists.txt)

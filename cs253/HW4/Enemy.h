@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdexcept>
 #include "Utilities.h"
 #include "Keys.h"
 
@@ -32,7 +33,7 @@ class Enemy
 public:
   Enemy() = default;
   Enemy(string keyfile);
-  void read(istream &input);
+  bool read(istream &input);
   void write(ostream &out) const;
   void write(const string &filename) const;
   string field(const string &key) const;
@@ -42,12 +43,13 @@ public:
   void clear();
   size_t size() const { return mySize; };
   bool empty() const { return mySize == 0; };
+  friend ostream &operator<<(ostream &out, const Enemy &e);
 
 private:
   Keys validKeys;
-  bool showName = true;
-  bool showOther = true;
-  bool showLink = true;
+  bool showName = false;
+  bool showOther = false;
+  bool showLink = false;
   EnemyProperty name;
   vector<EnemyProperty> others;
   vector<EnemyProperty> links;

@@ -48,24 +48,13 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/nklisch/school/cs253/HW3
+CMAKE_SOURCE_DIR = /home/nklisch/school/cs253/HW4
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/nklisch/school/cs253/HW3
+CMAKE_BINARY_DIR = /home/nklisch/school/cs253/HW4
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -78,11 +67,22 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nklisch/school/cs253/HW3/CMakeFiles /home/nklisch/school/cs253/HW3/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nklisch/school/cs253/HW4/CMakeFiles /home/nklisch/school/cs253/HW4/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nklisch/school/cs253/HW3/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nklisch/school/cs253/HW4/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,30 +111,43 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named main
+# Target rules for targets named libhw4
 
 # Build rule for target.
-main: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 main
-.PHONY : main
+libhw4: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 libhw4
+.PHONY : libhw4
 
 # fast build rule for target.
-main/fast:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-.PHONY : main/fast
+libhw4/fast:
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/build
+.PHONY : libhw4/fast
 
 #=============================================================================
-# Target rules for targets named hw3.tar
+# Target rules for targets named hw4.tar
 
 # Build rule for target.
-hw3.tar: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hw3.tar
-.PHONY : hw3.tar
+hw4.tar: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 hw4.tar
+.PHONY : hw4.tar
 
 # fast build rule for target.
-hw3.tar/fast:
-	$(MAKE) -f CMakeFiles/hw3.tar.dir/build.make CMakeFiles/hw3.tar.dir/build
-.PHONY : hw3.tar/fast
+hw4.tar/fast:
+	$(MAKE) -f CMakeFiles/hw4.tar.dir/build.make CMakeFiles/hw4.tar.dir/build
+.PHONY : hw4.tar/fast
+
+#=============================================================================
+# Target rules for targets named test
+
+# Build rule for target.
+test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test
+.PHONY : test
+
+# fast build rule for target.
+test/fast:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
+.PHONY : test/fast
 
 Enemy.o: Enemy.cc.o
 
@@ -142,7 +155,7 @@ Enemy.o: Enemy.cc.o
 
 # target to build an object file
 Enemy.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Enemy.cc.o
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Enemy.cc.o
 .PHONY : Enemy.cc.o
 
 Enemy.i: Enemy.cc.i
@@ -151,7 +164,7 @@ Enemy.i: Enemy.cc.i
 
 # target to preprocess a source file
 Enemy.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Enemy.cc.i
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Enemy.cc.i
 .PHONY : Enemy.cc.i
 
 Enemy.s: Enemy.cc.s
@@ -160,62 +173,8 @@ Enemy.s: Enemy.cc.s
 
 # target to generate assembly for a file
 Enemy.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Enemy.cc.s
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Enemy.cc.s
 .PHONY : Enemy.cc.s
-
-Error.o: Error.cc.o
-
-.PHONY : Error.o
-
-# target to build an object file
-Error.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Error.cc.o
-.PHONY : Error.cc.o
-
-Error.i: Error.cc.i
-
-.PHONY : Error.i
-
-# target to preprocess a source file
-Error.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Error.cc.i
-.PHONY : Error.cc.i
-
-Error.s: Error.cc.s
-
-.PHONY : Error.s
-
-# target to generate assembly for a file
-Error.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Error.cc.s
-.PHONY : Error.cc.s
-
-Input.o: Input.cc.o
-
-.PHONY : Input.o
-
-# target to build an object file
-Input.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Input.cc.o
-.PHONY : Input.cc.o
-
-Input.i: Input.cc.i
-
-.PHONY : Input.i
-
-# target to preprocess a source file
-Input.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Input.cc.i
-.PHONY : Input.cc.i
-
-Input.s: Input.cc.s
-
-.PHONY : Input.s
-
-# target to generate assembly for a file
-Input.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Input.cc.s
-.PHONY : Input.cc.s
 
 Keys.o: Keys.cc.o
 
@@ -223,7 +182,7 @@ Keys.o: Keys.cc.o
 
 # target to build an object file
 Keys.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Keys.cc.o
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Keys.cc.o
 .PHONY : Keys.cc.o
 
 Keys.i: Keys.cc.i
@@ -232,7 +191,7 @@ Keys.i: Keys.cc.i
 
 # target to preprocess a source file
 Keys.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Keys.cc.i
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Keys.cc.i
 .PHONY : Keys.cc.i
 
 Keys.s: Keys.cc.s
@@ -241,7 +200,7 @@ Keys.s: Keys.cc.s
 
 # target to generate assembly for a file
 Keys.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Keys.cc.s
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Keys.cc.s
 .PHONY : Keys.cc.s
 
 Utilities.o: Utilities.cc.o
@@ -250,7 +209,7 @@ Utilities.o: Utilities.cc.o
 
 # target to build an object file
 Utilities.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Utilities.cc.o
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Utilities.cc.o
 .PHONY : Utilities.cc.o
 
 Utilities.i: Utilities.cc.i
@@ -259,7 +218,7 @@ Utilities.i: Utilities.cc.i
 
 # target to preprocess a source file
 Utilities.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Utilities.cc.i
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Utilities.cc.i
 .PHONY : Utilities.cc.i
 
 Utilities.s: Utilities.cc.s
@@ -268,35 +227,35 @@ Utilities.s: Utilities.cc.s
 
 # target to generate assembly for a file
 Utilities.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Utilities.cc.s
+	$(MAKE) -f CMakeFiles/libhw4.dir/build.make CMakeFiles/libhw4.dir/Utilities.cc.s
 .PHONY : Utilities.cc.s
 
-main.o: main.cc.o
+test.o: test.cc.o
 
-.PHONY : main.o
+.PHONY : test.o
 
 # target to build an object file
-main.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cc.o
-.PHONY : main.cc.o
+test.cc.o:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cc.o
+.PHONY : test.cc.o
 
-main.i: main.cc.i
+test.i: test.cc.i
 
-.PHONY : main.i
+.PHONY : test.i
 
 # target to preprocess a source file
-main.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cc.i
-.PHONY : main.cc.i
+test.cc.i:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cc.i
+.PHONY : test.cc.i
 
-main.s: main.cc.s
+test.s: test.cc.s
 
-.PHONY : main.s
+.PHONY : test.s
 
 # target to generate assembly for a file
-main.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cc.s
-.PHONY : main.cc.s
+test.cc.s:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cc.s
+.PHONY : test.cc.s
 
 # Help Target
 help:
@@ -304,28 +263,23 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... main"
-	@echo "... hw3.tar"
+	@echo "... rebuild_cache"
+	@echo "... libhw4"
+	@echo "... hw4.tar"
+	@echo "... test"
 	@echo "... Enemy.o"
 	@echo "... Enemy.i"
 	@echo "... Enemy.s"
-	@echo "... Error.o"
-	@echo "... Error.i"
-	@echo "... Error.s"
-	@echo "... Input.o"
-	@echo "... Input.i"
-	@echo "... Input.s"
 	@echo "... Keys.o"
 	@echo "... Keys.i"
 	@echo "... Keys.s"
 	@echo "... Utilities.o"
 	@echo "... Utilities.i"
 	@echo "... Utilities.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 .PHONY : help
 
 

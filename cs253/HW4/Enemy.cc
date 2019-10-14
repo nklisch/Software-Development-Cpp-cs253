@@ -6,39 +6,45 @@ Enemy::Enemy(string keyfile)
 {
   ifstream input(keyfile);
   if (!input.is_open())
-    throw runtime_error("Keyfile: " + keyfile + "failed to open.");
+    throw runtime_error("Keyfile: " + keyfile + " failed to open.");
   readKeyFile(input, validKeys);
 }
 
-void Enemy::read(istream &input)
+bool Enemy::read(istream &input)
 {
+  clear();
   string key;
   string value;
   string line;
-  getline(input, line);
+  while (getline(input, line))
+  {
+    if (!isBlankLine(line))
+      break;
+  }
   if (isspace(line[0]))
     throw runtime_error("The key is missing for the line: " + line);
 
-  do
+  while (input && !isBlankLine(line))
   {
-    if (isBlankLine(line))
-      return;
     readKey(line, key);
     readValue(input, line, value);
     add(key, value);
     value.clear();
     key.clear();
-  } while (getline(input, line));
+  }
 
-  if (!hasName())
-    throw runtime_error("The enemy is missing it's name" + toString());
+  if (!empty() && !hasName())
+    throw runtime_error("The enemy is missing it's name\n" + toString());
+  if (empty())
+    return false;
+  return true;
 }
 
 void Enemy::write(const string &filename) const
 {
   ofstream output(filename, std::ofstream::out);
   if (!output.is_open())
-    throw runtime_error(filename + "failed to open.");
+    throw runtime_error(filename + " failed to open.");
   write(output);
   output.close();
 }
@@ -64,7 +70,7 @@ void Enemy::write(ostream &out) const
 string Enemy::field(const string &key) const
 {
   string v = find(key).value;
-  if (v.empty)
+  if (v.empty())
     throw range_error("Key " + key + " not found");
   return v;
 }
@@ -75,10 +81,9 @@ void Enemy::clear()
   validKeys.clear();
   others.clear();
   links.clear();
+  maxLinksLength = 0;
+  maxOthersLength = 0;
   mySize = 0;
-  showName = true;
-  showOther = true;
-  showLink = true;
 }
 
 void Enemy::writeName(ostream &out, int maxLength) const
@@ -111,27 +116,30 @@ void Enemy::add(const string &key, const string &value)
   if (!isAlphaNum(p.key))
     throw runtime_error("Key " + p.key + " is not alphanumeric.");
   if (!validKeys.empty() && !validKeys.contains(p.key))
-    throw runtime_error("The key:" + p.key + "is not valid it is not in the provided key file");
+    throw runtime_error("The key: " + p.key + "is not valid it is not in the provided key file");
   if (!isKeyUnique(p))
-    throw runtime_error("The key " + p.key + "is not unique");
+    throw runtime_error("The key " + p.key + " is not unique");
   if (p.value.empty())
     throw runtime_error("The value is missing for the key " + p.key);
 
   if (p.key == "Name")
   {
     name = p;
+    showName = true;
   }
   else if (key.find("Link") != string::npos)
   {
     links.push_back(p);
     if (p.key.length() > maxLinksLength)
       maxLinksLength = p.key.length();
+    showLink = true;
   }
   else
   {
     others.push_back(p);
     if (p.key.length() > maxOthersLength)
       maxOthersLength = p.key.length();
+    showOther = true;
   }
   mySize++;
 }
@@ -205,4 +213,10 @@ void Enemy::readKeyFile(ifstream &input, Keys &k)
         throw runtime_error("Key " + key + " is not alphanumeric.");
     }
   }
+}
+
+ostream &operator<<(ostream &out, const Enemy &e)
+{
+  e.write(out);
+  return out;
 }
