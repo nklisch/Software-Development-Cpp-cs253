@@ -16,11 +16,9 @@ bool Enemy::read(istream &input)
   string key;
   string value;
   string line;
-  while (getline(input, line))
-  {
-    if (!isBlankLine(line))
-      break;
-  }
+  
+  removeBlankLines(input,line);
+  
   if (isspace(line[0]))
     throw runtime_error("The key is missing for the line: " + line);
 
@@ -52,8 +50,8 @@ void Enemy::write(const string &filename) const
 void Enemy::write(ostream &out) const
 {
   size_t maxLength = 0;
-  if (showName && name.key.length() > maxLength)
-    maxLength = name.key.length();
+  if (showName && name.key().length() > maxLength)
+    maxLength = name.key().length();
   if (showOther && maxOthersLength > maxLength)
     maxLength = maxOthersLength;
   if (showLink && maxLinksLength > maxLength)
@@ -69,10 +67,10 @@ void Enemy::write(ostream &out) const
 
 string Enemy::field(const string &key) const
 {
-  string v = find(key).value;
-  if (v.empty())
+  EnemyProperty ep = find(key);
+  if (ep.empty())
     throw range_error("Key " + key + " not found");
-  return v;
+  return ep.value();
 }
 
 void Enemy::clear()
@@ -89,7 +87,7 @@ void Enemy::clear()
 void Enemy::writeName(ostream &out, int maxLength) const
 {
   out << setw(maxLength + 1);
-  out << name.key << name.value << "\n";
+  out << name.key() << name.value() << "\n";
 }
 
 void Enemy::writeLinks(ostream &out, int maxLength) const
@@ -97,7 +95,7 @@ void Enemy::writeLinks(ostream &out, int maxLength) const
   for (auto &l : links)
   {
     out << setw(maxLength + 1);
-    out << l.key << l.value << "\n";
+    out << l.key() << l.value() << "\n";
   }
 }
 
@@ -106,23 +104,23 @@ void Enemy::writeOthers(ostream &out, int maxLength) const
   for (auto &o : others)
   {
     out << setw(maxLength + 1);
-    out << o.key << o.value << "\n";
+    out << o.key() << o.value() << "\n";
   }
 }
 
 void Enemy::add(const string &key, const string &value)
 {
   EnemyProperty p(key, value);
-  if (!isAlphaNum(p.key))
-    throw runtime_error("Key " + p.key + " is not alphanumeric.");
-  if (!validKeys.empty() && !validKeys.contains(p.key))
-    throw runtime_error("The key: " + p.key + "is not valid it is not in the provided key file");
+  if (!isAlphaNum(p.key()))
+    throw runtime_error("Key " + p.key() + " is not alphanumeric.");
+  if (!validKeys.empty() && !validKeys.contains(p.key()))
+    throw runtime_error("The key: " + p.key() + "is not valid it is not in the provided key file");
   if (!isKeyUnique(p))
-    throw runtime_error("The key " + p.key + " is not unique");
-  if (p.value.empty())
-    throw runtime_error("The value is missing for the key " + p.key);
+    throw runtime_error("The key " + p.key() + " is not unique");
+  if (p.value().empty())
+    throw runtime_error("The value is missing for the key " + p.key());
 
-  if (p.key == "Name")
+  if (p.key() == "Name")
   {
     name = p;
     showName = true;
@@ -130,15 +128,15 @@ void Enemy::add(const string &key, const string &value)
   else if (key.find("Link") != string::npos)
   {
     links.push_back(p);
-    if (p.key.length() > maxLinksLength)
-      maxLinksLength = p.key.length();
+    if (p.key().length() > maxLinksLength)
+      maxLinksLength = p.key().length();
     showLink = true;
   }
   else
   {
     others.push_back(p);
-    if (p.key.length() > maxOthersLength)
-      maxOthersLength = p.key.length();
+    if (p.key().length() > maxOthersLength)
+      maxOthersLength = p.key().length();
     showOther = true;
   }
   mySize++;
@@ -146,26 +144,26 @@ void Enemy::add(const string &key, const string &value)
 
 string Enemy::toString() const
 {
-  string s(name.key + " " + name.value);
+  string s(name.key() + " " + name.value());
   for (auto &l : links)
-    s += "\n" + l.key + " " + l.value;
+    s += "\n" + l.key() + " " + l.value();
   for (auto &o : others)
-    s += "\n" + o.key + " " + o.value;
+    s += "\n" + o.key() + " " + o.value();
   return s;
 }
 
 EnemyProperty Enemy::find(const string &key) const
 {
-  if (key == name.key)
+  if (key == name.key())
     return name;
   for (auto &p : others)
   {
-    if (key == p.key)
+    if (key == p.key())
       return p;
   }
   for (auto &l : links)
   {
-    if (key == l.key)
+    if (key == l.key())
       return l;
   }
   return EnemyProperty();
@@ -198,7 +196,7 @@ void Enemy::readValue(istream &input, string &line, string &value)
   }
 }
 
-void Enemy::readKeyFile(ifstream &input, Keys &k)
+void Enemy::readKeyFile(istream &input, Keys &k)
 {
   string key;
   string line;

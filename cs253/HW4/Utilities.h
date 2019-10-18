@@ -15,4 +15,5 @@ size_t findFirstBlankChar(const std::string &);
 bool isBlankLine(const std::string &);
 bool isAlphaNum(const std::string &);
 std::string trim(const std::string &);
+void removeBlankLines(std::istream &in, std::string& line);
 #endif

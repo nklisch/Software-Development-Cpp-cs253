@@ -65,3 +65,8 @@ string trim(const string &line)
   size_t length = findNotBlankCharReverse(line) - index + 1;
   return line.substr(index, length);
 }
+
+void removeBlankLines(istream &in, string& line)
+{
+  while (getline(in, line) && isBlankLine(line));
+}

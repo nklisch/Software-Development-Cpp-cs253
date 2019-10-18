@@ -1,7 +1,5 @@
 #ifndef Enemy_h
 #define Enemy_h
-
-#include "Error.h"
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -10,18 +8,24 @@
 #include "Utilities.h"
 #include "Keys.h"
 
-struct EnemyProperty
+class EnemyProperty
 {
-  string key;
-  string value;
+  public:
+  typedef std::string string;
+  
   EnemyProperty() = default;
-  EnemyProperty(const string &k, const string &v) : key(k), value(v){};
-  bool empty() const { return key.empty(); }
+  EnemyProperty(const std::string &_k, const string &_v) : k(_k), v(_v){};
+  const string& key()const {return k;};
+  const string& value()const {return v;};
+  bool empty() const { return k.empty(); }
   void clear()
   {
-    key.clear();
-    value.clear();
+    k.clear();
+    v.clear();
   }
+  private:
+  string k;
+  string v;
 };
 
 class Enemy
@@ -51,14 +55,14 @@ private:
   bool showOther = false;
   bool showLink = false;
   EnemyProperty name;
-  vector<EnemyProperty> others;
-  vector<EnemyProperty> links;
+  std::vector<EnemyProperty> others;
+  std::vector<EnemyProperty> links;
   size_t maxLinksLength = 0;
   size_t maxOthersLength = 0;
   size_t mySize = 0;
   //Functions to read information in
   void readKey(string &line, string &key);
-  void readKeyFile(ifstream &input, Keys &k);
+  void readKeyFile(istream &input, Keys &k);
   void readEnemy(istream &input, string &line);
   void readValue(istream &input, string &line, string &value);
 
@@ -67,7 +71,7 @@ private:
   void writeName(ostream &out, int maxLength) const;
   void writeLinks(ostream &out, int maxLength) const;
   void writeOthers(ostream &out, int maxLength) const;
-  bool isKeyUnique(const EnemyProperty &prop) const { return find(prop.key).empty(); };
+  bool isKeyUnique(const EnemyProperty &prop) const { return find(prop.key()).empty(); };
   EnemyProperty find(const string &key) const;
   string toString() const;
 };

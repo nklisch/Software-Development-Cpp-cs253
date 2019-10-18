@@ -5,22 +5,24 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "Error.h"
+#include <stdexcept>
 #include "Utilities.h"
 
 class Keys
 {
+typedef std::string string;
 public:
     Keys() = default;
+    Keys(string k) {keys.push_back(k);};
     void add(const string &);
     bool contains(const string &) const;
-    bool empty() const;
+    bool empty() const {return keys.empty();};
     void clear() { keys.clear(); };
-    size_t size() const;
-    string &operator[](const size_t);
+    size_t size() const  {return keys.size();};
+    string &operator[](const size_t i){return keys[i];};
 
 private:
-    vector<string> keys;
+    std::vector<string> keys;
 };
 
 #endif
