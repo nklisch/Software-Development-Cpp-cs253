@@ -243,7 +243,7 @@ Enemy * Enemy::link(const string& relation) const
 const EnemyProperty& Enemy::getProperty(size_t i) const
 {
   if(i >= mySize)
-    throw range_error("The index " + i + " is out of bounds for enemy " + name.value());
+    throw range_error("The index " + to_string(i) + " is out of bounds for enemy " + name.value());
   if(i == 0)
     return name;
   if(i < others.size() + 1)
@@ -251,7 +251,7 @@ const EnemyProperty& Enemy::getProperty(size_t i) const
   return links[i - others.size() - 1];
 }
 
-bool Enemy::operator==(const Enemy& e)
+bool Enemy::operator==(const Enemy& e) const
 {
   if(e.mySize != mySize)
     return false;
@@ -261,7 +261,7 @@ for(size_t i = 0; i < mySize; i++)
   if(e[getProperty(i).key()] != getProperty(i).value())
     return false;
   }
-  catch (range_error e)
+  catch (const range_error& err)
   {
     return false;
   }

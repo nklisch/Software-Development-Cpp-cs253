@@ -55,7 +55,7 @@ public:
   size_t size() const { return mySize; };
   bool empty() const { return mySize == 0; };
   string operator[](const string& k) const {return field(k);}
-  operator bool() const {return empty();}
+  operator bool() const {return !empty();}
   std::pair<string,string> operator[](size_t i) const {return getProperty(i).toPair();}
   bool operator==(const Enemy& e) const;
   bool operator!=(const Enemy& e) const {return !(e == *this);};

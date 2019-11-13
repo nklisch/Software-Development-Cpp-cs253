@@ -21,11 +21,11 @@ void add(const Enemy &e){collection.push_back(e);};
 void clear() {collection.clear();};
 size_t size() const {return collection.size();};
 bool empty() const {return collection.size() == 0;};
-const Enemy* get(size_t n) const {return get(n);};
+const Enemy* get(size_t n) const;
 Enemy * get(size_t n);
 Enemy& operator[](size_t n) {return *get(n);};
 const Enemy& operator[](size_t n) const{return *get(n);};
-operator bool() const {return empty();}
+operator bool() const {return !empty();}
 friend std::ostream& operator<<(std::ostream& os, const Gallery & g);
 
 private:

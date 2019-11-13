@@ -1,6 +1,6 @@
 // Nathan Klisch
 // cs253, Fall2019
-// HW2
+// HW6
 #include "Gallery.h"
 #include <cassert>
 #include <iostream>
@@ -8,31 +8,42 @@
 
 using namespace std;
 
-int main() {
-	
-    Gallery g("bond-villains", "keys", "/dev/null");
-    assert(g.size() == 2);
-    g.read("jaws", "keys");
-    cout << g << "––––––––––––––––\n";
-    assert(g.size() == 3);
-    assert(!g.empty());
-    g.clear();
-    assert(g.size() == 0);
-    assert(g.empty());
-
-    const Gallery go("keys", "gold-odd");
-    for (size_t i=0; i<go.size(); i++) {
-        const Enemy *e = go.get(i);
-        try {
-            const Enemy *h = e->link("Henchman");   // might throw error
-            cout << e->field("Name") << "’s henchman is "
-                 << h->field("Name") << '\n';
-        }
-        catch (...) {
-            cout << e->field("Name") << "’s boss is "
-                 << e->link("Boss")->field("Name") << '\n';
-        }
+void show(const Enemy &e) {
+    for (size_t i=0; i<e.size(); i++) {
+        pair<string,string> p = e[i];
+        assert(e[p.first] == p.second);
+        cout << p.first << ": " << p.second << '\n';
     }
+}
+
+void show(const Gallery &g) {
+    for (size_t i=0; i<g.size(); i++) {
+        if (i>0)
+            cout << '\n';
+        show(g[i]);
+    }
+}
+
+int main() {
+    Gallery vacant("pokékeys", "/dev/null");
+    const Gallery monsters("pokémon", "pokékeys");
+
+    assert(!vacant);
+    assert(monsters);
+    assert(monsters[0]);
+
+    assert(monsters[0] == monsters[0]);
+    assert(monsters[1] == monsters[1]);
+    assert(!(monsters[1] == monsters[0]));
+    assert(!(monsters[0] == monsters[1]));
+
+    assert(!(monsters[0] != monsters[0]));
+    assert(!(monsters[1] != monsters[1]));
+    assert(monsters[1] != monsters[0]);
+    assert(monsters[0] != monsters[1]);
+
+    show(vacant);
+    show(monsters);
 
     return 0;
 }

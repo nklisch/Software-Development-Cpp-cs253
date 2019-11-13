@@ -107,8 +107,16 @@ return flag;
 }
 Enemy * Gallery::get(size_t n)
 {
-    if(n >= collection.size()) 
-        throw range_error("Index out of bounds: " + n + " max is " + collection.size());
+    if(n >= size()) 
+        throw range_error("Index out of bounds: " + to_string(n) + " max is " + to_string(size()));
+
+    return &collection[n];
+}
+
+const Enemy* Gallery::get(size_t n) const
+{
+    if(n >= size()) 
+        throw range_error("Index out of bounds: " + to_string(n) + " max is " + to_string(size()));
     return &collection[n];
 }
 
