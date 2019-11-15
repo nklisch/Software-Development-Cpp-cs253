@@ -1,4 +1,6 @@
 #include "Keys.h"
+#include <stdexcept>
+#include <unordered_map>
 using namespace std;
 
 void Keys::add(const string &key)
@@ -7,15 +9,13 @@ void Keys::add(const string &key)
   {
     throw runtime_error("This key: " + key + ",already exists");
   }
-  keys.push_back(key);
+  keys[key] = string::npos;
 }
 
-bool Keys::contains(const string &key) const
+size_t Keys::getIndex(const string &s) const
 {
-  for (const string &k : keys)
-  {
-    if (k == key)
-      return true;
-  }
-  return false;
+  auto found = keys.find(s);
+  if (found == keys.end())
+    return string::npos;
+  return found->second;
 }

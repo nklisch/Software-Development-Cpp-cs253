@@ -1,23 +1,27 @@
 #include "Enemy.h"
 #include "Gallery.h"
+#include <stdexcept>
+#include <iomanip>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
-Enemy::Enemy(const string& keyfile)
+Enemy::Enemy(const string &keyfile)
 {
   ifstream input(keyfile);
   if (!input.is_open())
     throw runtime_error("Keyfile: " + keyfile + " failed to open.");
-  readKeyFile(input, validKeys);
+  readKeyFile(input);
   myGallery = nullptr;
 }
 
-Enemy::Enemy(const string& keyfile, Gallery * g)
+Enemy::Enemy(const string &keyfile, Gallery *g)
 {
   ifstream input(keyfile);
   if (!input.is_open())
     throw runtime_error("Keyfile: " + keyfile + " failed to open.");
-  readKeyFile(input, validKeys);
+  readKeyFile(input);
   myGallery = g;
 }
 
@@ -27,9 +31,9 @@ bool Enemy::read(istream &input)
   string key;
   string value;
   string line;
-  
-  removeBlankLines(input,line);
-  
+
+  removeBlankLines(input, line);
+
   if (isspace(line[0]))
     throw runtime_error("The key is missing for the line: " + line);
 
@@ -78,10 +82,14 @@ void Enemy::write(ostream &out) const
 
 string Enemy::field(const string &key) const
 {
-  EnemyProperty ep = find(key);
-  if (ep.empty())
+  try
+  {
+    return find(key).value();
+  }
+  catch (range_error &e)
+  {
     throw range_error("Key " + key + " not found");
-  return ep.value();
+  }
 }
 
 void Enemy::clear()
@@ -134,9 +142,11 @@ void Enemy::add(const string &key, const string &value)
   {
     name = p;
     showName = true;
+    validKeys.setIndex(p.key(), 0);
   }
   else if (key.find("Link") != string::npos)
   {
+    validKeys.setIndex(p.key(), links.size());
     links.push_back(p);
     if (p.key().length() > maxLinksLength)
       maxLinksLength = p.key().length();
@@ -144,6 +154,7 @@ void Enemy::add(const string &key, const string &value)
   }
   else
   {
+    validKeys.setIndex(p.key(), mySize);
     others.push_back(p);
     if (p.key().length() > maxOthersLength)
       maxOthersLength = p.key().length();
@@ -162,21 +173,9 @@ string Enemy::toString() const
   return s;
 }
 
-EnemyProperty Enemy::find(const string &key) const
+const EnemyProperty &Enemy::find(const string &key) const
 {
-  if (key == name.key())
-    return name;
-  for (auto &p : others)
-  {
-    if (key == p.key())
-      return p;
-  }
-  for (auto &l : links)
-  {
-    if (key == l.key())
-      return l;
-  }
-  return EnemyProperty();
+  return getProperty(validKeys.getIndex(key));
 }
 
 void Enemy::readKey(string &line, string &key)
@@ -206,7 +205,7 @@ void Enemy::readValue(istream &input, string &line, string &value)
   }
 }
 
-void Enemy::readKeyFile(istream &input, Keys &k)
+void Enemy::readKeyFile(istream &input)
 {
   string key;
   string line;
@@ -216,57 +215,64 @@ void Enemy::readKeyFile(istream &input, Keys &k)
     if (!line.empty())
     {
       if (isAlphaNum(key))
-        k.add(key);
+        validKeys.add(key);
       else
         throw runtime_error("Key " + key + " is not alphanumeric.");
     }
   }
 }
 
-Enemy * Enemy::link(const string& relation) const 
+Enemy *Enemy::link(const string &relation) const
 {
-  if(!myGallery)
+  if (!myGallery)
     throw runtime_error("The enemy " + name.value() + " does not belong to a gallery");
-
-  EnemyProperty ep = find("Link" + relation); 
-  if(ep.empty())
+  EnemyProperty ep;
+  try
+  {
+    ep = find("Link" + relation);
+  }
+  catch (range_error &e)
+  {
     throw range_error("No link relation of the type " + relation);
-    
-  for(size_t i = 0; i < myGallery->size(); i++){
-    if(myGallery->get(i)->getName() == ep.value())
+  }
+
+  for (size_t i = 0; i < myGallery->size(); i++)
+  {
+    if (myGallery->get(i)->getName() == ep.value())
       return myGallery->get(i);
-    }
+  }
   throw range_error("No enemy in this gallery is related by " + relation);
   return nullptr;
 }
 
-const EnemyProperty& Enemy::getProperty(size_t i) const
+const EnemyProperty &Enemy::getProperty(size_t i) const
 {
-  if(i >= mySize)
+  if (i >= mySize)
     throw range_error("The index " + to_string(i) + " is out of bounds for enemy " + name.value());
-  if(i == 0)
+  if (i == 0)
     return name;
-  if(i < others.size() + 1)
+  if (i < others.size() + 1)
     return others[i - 1];
   return links[i - others.size() - 1];
 }
 
-bool Enemy::operator==(const Enemy& e) const
+bool Enemy::operator==(const Enemy &e) const
 {
-  if(e.mySize != mySize)
+  if (e.mySize != mySize)
     return false;
-for(size_t i = 0; i < mySize; i++)
-{
-  try{
-  if(e[getProperty(i).key()] != getProperty(i).value())
-    return false;
-  }
-  catch (const range_error& err)
+  for (size_t i = 0; i < mySize; i++)
   {
-    return false;
+    try
+    {
+      if (e[getProperty(i).key()] != getProperty(i).value())
+        return false;
+    }
+    catch (const range_error &err)
+    {
+      return false;
+    }
   }
-}
-return true;
+  return true;
 }
 
 ostream &operator<<(ostream &out, const Enemy &e)
@@ -275,4 +281,15 @@ ostream &operator<<(ostream &out, const Enemy &e)
   return out;
 }
 
-
+bool Enemy::isKeyUnique(const EnemyProperty &prop) const
+{
+  try
+  {
+    find(prop.key());
+  }
+  catch (range_error &e)
+  {
+    return true;
+  }
+  return false;
+}

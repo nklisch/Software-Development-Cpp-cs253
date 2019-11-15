@@ -1,28 +1,26 @@
 #ifndef Keys_h
 #define Keys_h
-
-#include <vector>
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
 #include "Utilities.h"
+#include <string>
+#include <unordered_map>
 
 class Keys
 {
-typedef std::string string;
+    typedef std::string string;
+
 public:
     Keys() = default;
-    Keys(string k) {keys.push_back(k);};
+    Keys(const string &k) { keys[k] = string::npos; };
     void add(const string &);
-    bool contains(const string &) const;
-    bool empty() const {return keys.empty();};
+    void setIndex(const string &s, size_t i) { keys[s] = i; };
+    size_t getIndex(const string &s) const;
+    bool contains(const string &key) const { return keys.end() != keys.find(key); };
+    bool empty() const { return keys.empty(); };
     void clear() { keys.clear(); };
-    size_t size() const  {return keys.size();};
-    string &operator[](const size_t i){return keys[i];};
+    size_t size() const { return keys.size(); };
 
 private:
-    std::vector<string> keys;
+    std::unordered_map<string, size_t> keys;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <fstream>
 
 using namespace std;
 
@@ -68,7 +69,7 @@ void Gallery::create()
     for (size_t i = 0; i < files.size(); i++)
     {
         openFiles[i].open(files[i]);
-        if (openFiles[i])
+        if (!openFiles[i])
             throw runtime_error("File " + files[i] + " provided did not open");
         if (isKeyfile(openFiles[i]))
         {
