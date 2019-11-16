@@ -19,10 +19,26 @@ Enemy::Enemy(const string &keyfile)
 Enemy::Enemy(const string &keyfile, Gallery *g)
 {
   ifstream input(keyfile);
-  if (!input.is_open())
+  if (!input)
     throw runtime_error("Keyfile: " + keyfile + " failed to open.");
   readKeyFile(input);
   myGallery = g;
+}
+
+Enemy::Enemy(istream &input)
+{
+if (!input)
+    throw runtime_error("Keyfile Input stream given to enemy failed");
+readKeyFile(input);
+myGallery = nullptr;
+}
+Enemy::Enemy (istream &input, Gallery *g)
+{
+if (!input)
+  throw runtime_error("Keyfile Input stream given to enemy failed");
+
+readKeyFile(input);
+myGallery = g;
 }
 
 bool Enemy::read(istream &input)
@@ -128,36 +144,36 @@ void Enemy::writeOthers(ostream &out, int maxLength) const
 
 void Enemy::add(const string &key, const string &value)
 {
-  EnemyProperty p(key, value);
-  if (!isAlphaNum(p.key()))
-    throw runtime_error("Key " + p.key() + " is not alphanumeric.");
-  if (!validKeys.empty() && !validKeys.contains(p.key()))
-    throw runtime_error("The key: " + p.key() + "is not valid it is not in the provided key file");
-  if (!isKeyUnique(p))
-    throw runtime_error("The key " + p.key() + " is not unique");
-  if (p.value().empty())
-    throw runtime_error("The value is missing for the key " + p.key());
+  ;
+  if (!isAlphaNum(key))
+    throw runtime_error("Key " + key + " is not alphanumeric.");
+  if (!validKeys.empty() && !validKeys.contains(key))
+    throw runtime_error("The key: " + key + "is not valid it is not in the provided key file");
+  if (!isKeyUnique(key))
+    throw runtime_error("The key " + key + " is not unique");
+  if (value.empty())
+    throw runtime_error("The value is missing for the key " + key);
 
-  if (p.key() == "Name")
+  if (key == "Name")
   {
-    name = p;
+    name = EnemyProperty (key, value);
     showName = true;
-    validKeys.setIndex(p.key(), 0);
+    validKeys.setIndex(key, 0);
   }
   else if (key.find("Link") != string::npos)
   {
-    validKeys.setIndex(p.key(), links.size());
-    links.push_back(p);
-    if (p.key().length() > maxLinksLength)
-      maxLinksLength = p.key().length();
+    validKeys.setIndex(key, links.size());
+    links.push_back(EnemyProperty (key, value));
+    if (key.length() > maxLinksLength)
+      maxLinksLength = key.length();
     showLink = true;
   }
   else
   {
-    validKeys.setIndex(p.key(), mySize);
-    others.push_back(p);
-    if (p.key().length() > maxOthersLength)
-      maxOthersLength = p.key().length();
+    validKeys.setIndex(key, others.size());
+    others.push_back(EnemyProperty (key, value));
+    if (key.length() > maxOthersLength)
+      maxOthersLength = key.length();
     showOther = true;
   }
   mySize++;
@@ -175,7 +191,12 @@ string Enemy::toString() const
 
 const EnemyProperty &Enemy::find(const string &key) const
 {
-  return getProperty(validKeys.getIndex(key));
+  size_t index = validKeys.getIndex(key);
+  if(key == "Name")
+    return getProperty(index);
+  if(string::npos != key.find("Link"))
+    return getProperty(index + others.size() + 1);
+  return getProperty(index + 1);
 }
 
 void Enemy::readKey(string &line, string &key)
@@ -281,11 +302,11 @@ ostream &operator<<(ostream &out, const Enemy &e)
   return out;
 }
 
-bool Enemy::isKeyUnique(const EnemyProperty &prop) const
+bool Enemy::isKeyUnique(const string &key) const
 {
   try
   {
-    find(prop.key());
+    find(key);
   }
   catch (range_error &e)
   {

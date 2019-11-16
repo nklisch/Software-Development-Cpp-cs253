@@ -53,7 +53,18 @@ Gallery::Gallery(const string &f1, const string &f2, const string &f3, const str
     create();
 }
 
-void Gallery::read(ifstream &inFile, const string &keyfile)
+void Gallery::read(const string &file, const string &keyfile)
+{
+    ifstream inFile(file);
+    ifstream keys(keyfile);
+    if(keys)
+        throw runtime_error("Key file" + keyfile + "failed to open.");
+    if(inFile)
+        throw runtime_error("File " + file + " failed to open.");
+    readFromStream(inFile,keys);
+}
+
+void Gallery::readFromStream(istream &inFile, istream &keyfile)
 {
     Enemy e(keyfile, this);
     while (e.read(inFile))
@@ -81,19 +92,20 @@ void Gallery::create()
 
     if (keyfileIndex == string::npos)
         throw runtime_error("No keyfile provided!");
-
-    openFiles[keyfileIndex].close();
+    openFiles[keyfileIndex].clear();
+    openFiles[keyfileIndex].seekg(ios_base::beg);
     for (size_t i = 0; i < files.size(); i++)
     {
         if (i != keyfileIndex)
         {
+            openFiles[i].clear();
             openFiles[i].seekg(ios_base::beg);
-            read(openFiles[i], files[keyfileIndex]);
+            readFromStream(openFiles[i], openFiles[keyfileIndex]);
         }
     }
 }
 
-bool Gallery::isKeyfile(ifstream &infile) const
+bool Gallery::isKeyfile(istream &infile) const
 {
 
     string line;

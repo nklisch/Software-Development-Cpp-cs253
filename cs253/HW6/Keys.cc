@@ -7,7 +7,7 @@ void Keys::add(const string &key)
 {
   if (contains(key))
   {
-    throw runtime_error("This key: " + key + ",already exists");
+    throw runtime_error("This key: " + key + " already exists");
   }
   keys[key] = string::npos;
 }

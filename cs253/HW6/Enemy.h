@@ -47,6 +47,8 @@ public:
   Enemy() = delete;
   Enemy(const string &keyfile);
   Enemy(const string &keyfile, Gallery *g);
+  Enemy(istream &input);
+  Enemy(istream &input, Gallery *g);
   bool read(istream &input);
   void write(ostream &out) const;
   void write(const string &filename) const;
@@ -90,7 +92,7 @@ private:
   void writeName(ostream &out, int maxLength) const;
   void writeLinks(ostream &out, int maxLength) const;
   void writeOthers(ostream &out, int maxLength) const;
-  bool isKeyUnique(const EnemyProperty &prop) const;
+  bool isKeyUnique(const string &prop) const;
   const EnemyProperty &find(const string &key) const;
   string toString() const;
 };

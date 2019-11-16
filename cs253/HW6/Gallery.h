@@ -5,7 +5,7 @@
 #include <vector>
 #include "Enemy.h"
 typedef std::string string;
-typedef std::ifstream ifstream;
+typedef std::istream istream;
 class Gallery
 {
 public:
@@ -15,7 +15,7 @@ public:
 	Gallery(const string &f1, const string &f2, const string &f3, const string &f4, const string &f5);
 	Gallery(const string &f1, const string &f2, const string &f3, const string &f4, const string &f5, const string &f6);
 
-	void read(ifstream &inFile, const string &keyfile);
+	void read(const string &file, const string &keyfile);
 	void add(const Enemy &e) { collection.push_back(e); };
 	void clear() { collection.clear(); };
 	size_t size() const { return collection.size(); };
@@ -29,9 +29,10 @@ public:
 
 private:
 	std::vector<string> files;
+	void readFromStream(istream &inFile, istream &keyfile);
 	void create();
-	size_t findKeyFile(ifstream *openFiles);
-	bool isKeyfile(ifstream &infile) const;
+	size_t findKeyFile(istream *openFiles);
+	bool isKeyfile(istream &infile) const;
 	std::vector<Enemy> collection;
 };
 
