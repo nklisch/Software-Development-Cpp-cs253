@@ -107,7 +107,6 @@ void Gallery::create()
 
 bool Gallery::isKeyfile(istream &infile) const
 {
-
     string line;
     bool flag = false;
     while (getline(infile, line))
@@ -120,7 +119,6 @@ bool Gallery::isKeyfile(istream &infile) const
             return false;
         flag = true;
     }
-
     return flag;
 }
 Enemy *Gallery::get(size_t n)

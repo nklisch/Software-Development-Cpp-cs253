@@ -44,8 +44,6 @@ myGallery = g;
 bool Enemy::read(istream &input)
 {
   clear();
-  string key;
-  string value;
   string line;
 
   removeBlankLines(input, line);
@@ -55,11 +53,11 @@ bool Enemy::read(istream &input)
 
   while (input && !isBlankLine(line))
   {
+    string key;
+    string value;
     readKey(line, key);
     readValue(input, line, value);
     add(key, value);
-    value.clear();
-    key.clear();
   }
 
   if (!empty() && !hasName())
@@ -80,9 +78,10 @@ void Enemy::write(const string &filename) const
 
 void Enemy::write(ostream &out) const
 {
+
   size_t maxLength = 0;
-  if (showName && name.key().length() > maxLength)
-    maxLength = name.key().length();
+  if (showName && nameSize > maxLength)
+    maxLength = nameSize;
   if (showOther && maxOthersLength > maxLength)
     maxLength = maxOthersLength;
   if (showLink && maxLinksLength > maxLength)
@@ -98,21 +97,20 @@ void Enemy::write(ostream &out) const
 
 string Enemy::field(const string &key) const
 {
-  try
-  {
-    return find(key).value();
-  }
-  catch (range_error &e)
-  {
+  if(key == "Name")
+    return name;
+  auto valueI = keyValues.find(key);
+  if(valueI == keyValues.end())
     throw range_error("Key " + key + " not found");
-  }
+  return valueI->second;
 }
 
 void Enemy::clear()
 {
   name.clear();
-  others.clear();
-  links.clear();
+  otherKeys.clear();
+  linkKeys.clear();
+  keyValues.clear();
   maxLinksLength = 0;
   maxOthersLength = 0;
   mySize = 0;
@@ -121,34 +119,33 @@ void Enemy::clear()
 void Enemy::writeName(ostream &out, int maxLength) const
 {
   out << setw(maxLength + 1);
-  out << name.key() << name.value() << "\n";
+  out << "Name" << name << "\n";
 }
 
 void Enemy::writeLinks(ostream &out, int maxLength) const
 {
-  for (auto &l : links)
+  for (auto &l : linkKeys)
   {
     out << setw(maxLength + 1);
-    out << l.key() << l.value() << "\n";
+    out << l << keyValues.at(l) << "\n";
   }
 }
 
 void Enemy::writeOthers(ostream &out, int maxLength) const
 {
-  for (auto &o : others)
+  for (auto &o : otherKeys)
   {
     out << setw(maxLength + 1);
-    out << o.key() << o.value() << "\n";
+    out << o << keyValues.at(o) << "\n";
   }
 }
 
 void Enemy::add(const string &key, const string &value)
 {
-  ;
   if (!isAlphaNum(key))
     throw runtime_error("Key " + key + " is not alphanumeric.");
-  if (!validKeys.empty() && !validKeys.contains(key))
-    throw runtime_error("The key: " + key + "is not valid it is not in the provided key file");
+  if (validKeys.find(key) == validKeys.end())
+    throw runtime_error("The key " + key + " is not valid it is not in the provided key file");
   if (!isKeyUnique(key))
     throw runtime_error("The key " + key + " is not unique");
   if (value.empty())
@@ -156,22 +153,21 @@ void Enemy::add(const string &key, const string &value)
 
   if (key == "Name")
   {
-    name = EnemyProperty (key, value);
+    name = value;
     showName = true;
-    validKeys.setIndex(key, 0);
   }
   else if (key.find("Link") != string::npos)
   {
-    validKeys.setIndex(key, links.size());
-    links.push_back(EnemyProperty (key, value));
+    linkKeys.push_back(key);
+    keyValues[key] = value;
     if (key.length() > maxLinksLength)
       maxLinksLength = key.length();
     showLink = true;
   }
   else
   {
-    validKeys.setIndex(key, others.size());
-    others.push_back(EnemyProperty (key, value));
+    otherKeys.push_back(key);
+    keyValues[key] = value;
     if (key.length() > maxOthersLength)
       maxOthersLength = key.length();
     showOther = true;
@@ -181,22 +177,12 @@ void Enemy::add(const string &key, const string &value)
 
 string Enemy::toString() const
 {
-  string s(name.key() + " " + name.value());
-  for (auto &l : links)
-    s += "\n" + l.key() + " " + l.value();
-  for (auto &o : others)
-    s += "\n" + o.key() + " " + o.value();
+  string s("Name " + name);
+  for (auto &l : linkKeys)
+    s += "\n" + l + " " + keyValues.at(l);
+  for (auto &o : otherKeys)
+    s += "\n" + o + " " + keyValues.at(o);
   return s;
-}
-
-const EnemyProperty &Enemy::find(const string &key) const
-{
-  size_t index = validKeys.getIndex(key);
-  if(key == "Name")
-    return getProperty(index);
-  if(string::npos != key.find("Link"))
-    return getProperty(index + others.size() + 1);
-  return getProperty(index + 1);
 }
 
 void Enemy::readKey(string &line, string &key)
@@ -235,8 +221,11 @@ void Enemy::readKeyFile(istream &input)
     key = trim(line);
     if (!line.empty())
     {
-      if (isAlphaNum(key))
-        validKeys.add(key);
+      if (isAlphaNum(key)){
+        auto result = validKeys.insert(key);
+        if(!result.second)
+          throw runtime_error("This key: " + key + " already exists");
+      }
       else
         throw runtime_error("Key " + key + " is not alphanumeric.");
     }
@@ -246,11 +235,11 @@ void Enemy::readKeyFile(istream &input)
 Enemy *Enemy::link(const string &relation) const
 {
   if (!myGallery)
-    throw runtime_error("The enemy " + name.value() + " does not belong to a gallery");
-  EnemyProperty ep;
+    throw runtime_error("The enemy " + name + " does not belong to a gallery");
+  string value;
   try
   {
-    ep = find("Link" + relation);
+    value = field("Link" + relation);
   }
   catch (range_error &e)
   {
@@ -259,33 +248,22 @@ Enemy *Enemy::link(const string &relation) const
 
   for (size_t i = 0; i < myGallery->size(); i++)
   {
-    if (myGallery->get(i)->getName() == ep.value())
+    if (myGallery->get(i)->getName() == value)
       return myGallery->get(i);
   }
   throw range_error("No enemy in this gallery is related by " + relation);
   return nullptr;
 }
 
-const EnemyProperty &Enemy::getProperty(size_t i) const
-{
-  if (i >= mySize)
-    throw range_error("The index " + to_string(i) + " is out of bounds for enemy " + name.value());
-  if (i == 0)
-    return name;
-  if (i < others.size() + 1)
-    return others[i - 1];
-  return links[i - others.size() - 1];
-}
-
 bool Enemy::operator==(const Enemy &e) const
 {
   if (e.mySize != mySize)
     return false;
-  for (size_t i = 0; i < mySize; i++)
+  for (const auto &kv : keyValues)
   {
     try
     {
-      if (e[getProperty(i).key()] != getProperty(i).value())
+      if (e[kv.first] != kv.second)
         return false;
     }
     catch (const range_error &err)
@@ -304,13 +282,18 @@ ostream &operator<<(ostream &out, const Enemy &e)
 
 bool Enemy::isKeyUnique(const string &key) const
 {
-  try
-  {
-    find(key);
-  }
-  catch (range_error &e)
-  {
-    return true;
-  }
-  return false;
+  if(key == "Name" && hasName())
+    return false;
+  return keyValues.find(key) == keyValues.end();
+}
+
+std::pair<string, string> Enemy::operator[](size_t i) const 
+{
+if(i >= mySize)
+    throw range_error("Index " + to_string(i) + " is out of bounds in enemy " + name);
+if(i == 0)
+  return std::pair<string,string>("Name", name);
+else if(i < otherKeys.size() + 1)
+  return *keyValues.find(otherKeys[i - 1]);
+return *keyValues.find(linkKeys[i - otherKeys.size() - 1]); 
 }

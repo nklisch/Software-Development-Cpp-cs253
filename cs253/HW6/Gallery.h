@@ -28,6 +28,7 @@ public:
 	friend std::ostream &operator<<(std::ostream &os, const Gallery &g);
 
 private:
+	
 	std::vector<string> files;
 	void readFromStream(istream &inFile, istream &keyfile);
 	void create();
