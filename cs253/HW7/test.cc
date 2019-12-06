@@ -46,7 +46,7 @@ void test_gallery_iterators(const Gallery &g) {
     auto a1 = it1++;            // iterator “pointing” to first element
     auto b1 = it1++;            // iterator “pointing” to second element
     auto c1 = it1++;            // iterator “pointing” to third element
-    
+
     Gallery::iterator it2 = g.begin();
     const auto a2 = it2;        // iterator “pointing” to first element
     const auto b2 = ++it2;      // iterator “pointing” to second element
@@ -69,7 +69,6 @@ void test_gallery_iterators(const Gallery &g) {
     assert(b1 != c1);
 
     // Assure that the iterators, acquired in various ways, match.
-    
     assert(a1 == a2);
     assert(b1 == b2);
     assert(c1 == c2);
@@ -164,20 +163,15 @@ void test_enemy_iterators(const Gallery &g) {
 }
 
 int main() {
-    int numIterations = 1000;
-    for(int i =0; i<numIterations; i++){ 
     try {
         const Gallery vacant("oz-keys", "/dev/null");
         Gallery monsters("oz-villains", "oz-keys");
-        
+
         assert(!vacant);
         assert(monsters);
         assert(monsters[0]);
 
         test_comparison_operators(monsters);
-        
-        
-        cout<<"_______________________ working with\n"<<monsters<<"_______________________"<<endl;
         test_gallery_iterators(monsters);
         test_enemy_iterators(monsters);
 
@@ -192,33 +186,8 @@ int main() {
         cerr << "Caught something, but it’s not a std::exception‽\n";
         return 2;
     }
-    
-    Gallery vacants("pokékeys", "/dev/null");
-    const Gallery monster("pokémon", "pokékeys");
 
-    assert(!vacants);
-
-    assert(monster);
-
-    assert(monster[0]);
-
-    assert(monster[0] == monster[0]);
-
-    assert(monster[1] == monster[1]);
-
-    assert(!(monster[1] == monster[0]));
-
-    assert(!(monster[0] == monster[1]));
-
-    assert(!(monster[0] != monster[0]));
-
-    assert(!(monster[1] != monster[1]));
-
-    assert(monster[1] != monster[0]);
-
-    assert(monster[0] != monster[1]);
-
-    }
     cout << "*** Done! ***\n";
+
     return 0;
 }

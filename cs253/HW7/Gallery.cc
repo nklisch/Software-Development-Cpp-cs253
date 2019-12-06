@@ -92,12 +92,13 @@ void Gallery::create()
 
     if (keyfileIndex == string::npos)
         throw runtime_error("No keyfile provided!");
-    openFiles[keyfileIndex].clear();
-    openFiles[keyfileIndex].seekg(ios_base::beg);
+    
     for (size_t i = 0; i < files.size(); i++)
     {
         if (i != keyfileIndex)
         {
+            openFiles[keyfileIndex].clear();
+            openFiles[keyfileIndex].seekg(ios_base::beg);
             openFiles[i].clear();
             openFiles[i].seekg(ios_base::beg);
             readFromStream(openFiles[i], openFiles[keyfileIndex]);
