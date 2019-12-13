@@ -1,0 +1,16 @@
+#include "Gallery.h"
+#include "Enemy.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cassert>
+#include <stdexcept>
+#include <sstream>
+
+// 
+using namespace std;
+
+int main() {
+    Gallery g("bond-villains", "gold-odd","file0", "jaws");
+    assert(g.size() == 6);
+}
