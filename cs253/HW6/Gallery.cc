@@ -4,32 +4,36 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <fstream>
 
 using namespace std;
 
-
-Gallery::Gallery(const string& f1, const string& f2)
+Gallery::Gallery(const string &f1, const string &f2)
 {
     files.push_back(f1);
     files.push_back(f2);
     create();
 }
-Gallery::Gallery(const string& f1, const string& f2, const string& f3)
+Gallery::Gallery(const string &f1, const string &f2, const string &f3)
 {
+    files.reserve(3);
     files.push_back(f1);
     files.push_back(f2);
     files.push_back(f3);
     create();
 }
-Gallery::Gallery(const string& f1, const string& f2, const string& f3, const string& f4)
+Gallery::Gallery(const string &f1, const string &f2, const string &f3, const string &f4)
 {
-files.push_back(f1);
+    files.reserve(4);
+    files.push_back(f1);
     files.push_back(f2);
     files.push_back(f3);
     files.push_back(f4);
     create();
 }
-Gallery::Gallery(const string& f1, const string& f2, const string& f3, const string& f4, const string& f5){
+Gallery::Gallery(const string &f1, const string &f2, const string &f3, const string &f4, const string &f5)
+{
+    files.reserve(5);
     files.push_back(f1);
     files.push_back(f2);
     files.push_back(f3);
@@ -37,8 +41,9 @@ Gallery::Gallery(const string& f1, const string& f2, const string& f3, const str
     files.push_back(f5);
     create();
 }
-Gallery::Gallery(const string& f1, const string& f2, const string& f3, const string& f4, const string& f5, const string& f6)
+Gallery::Gallery(const string &f1, const string &f2, const string &f3, const string &f4, const string &f5, const string &f6)
 {
+    files.reserve(6);
     files.push_back(f1);
     files.push_back(f2);
     files.push_back(f3);
@@ -48,83 +53,95 @@ Gallery::Gallery(const string& f1, const string& f2, const string& f3, const str
     create();
 }
 
-void Gallery::read(const string &filename, const string &keyfile)
+void Gallery::read(const string &file, const string &keyfile)
 {
-Enemy e(keyfile, this);
-ifstream inFile(filename);
-while(e.read(inFile)){
-    add(e);
-}
+    ifstream inFile(file);
+    ifstream keys(keyfile);
+    if(keys)
+        throw runtime_error("Key file" + keyfile + "failed to open.");
+    if(inFile)
+        throw runtime_error("File " + file + " failed to open.");
+    readFromStream(inFile,keys);
 }
 
-size_t Gallery::findKeyfile() const
+void Gallery::readFromStream(istream &inFile, istream &keyfile)
 {
-    size_t key = string::npos;
-    for(size_t i = 0; i < files.size(); i++)
+    Enemy e(keyfile, this);
+    while (e.read(inFile))
     {
-        if(isKeyfile(files[i]))
+        add(e);
+    }
+}
+
+void Gallery::create()
+{
+    ifstream openFiles[6];
+    size_t keyfileIndex = string::npos;
+    for (size_t i = 0; i < files.size(); i++)
+    {
+        openFiles[i].open(files[i]);
+        if (!openFiles[i])
+            throw runtime_error("File " + files[i] + " provided did not open");
+        if (isKeyfile(openFiles[i]))
         {
-            if(key != string::npos)
+            if (keyfileIndex != string::npos)
                 throw runtime_error("Too many keyfiles! Keyfile: " + files[i]);
-            key = i;
+            keyfileIndex = i;
         }
     }
-    if(key == string::npos)
+
+    if (keyfileIndex == string::npos)
         throw runtime_error("No keyfile provided!");
-    return key;
-}
-
-void Gallery::create(){
-    string keyfile;
-    size_t index;
-    index = findKeyfile();
-    keyfile = files[index];
-    files.erase(files.begin() + index);
-    for(const auto &f : files){
-        read(f, keyfile);
-    }
-}
-
-bool Gallery::isKeyfile(const string& filename) const
-{
-ifstream infile(filename);
-if(!infile)
-    throw runtime_error("File " + filename +" provided did not open");
-string line;
-bool flag = false;
-while(getline(infile, line))
+    openFiles[keyfileIndex].clear();
+    openFiles[keyfileIndex].seekg(ios_base::beg);
+    for (size_t i = 0; i < files.size(); i++)
     {
-    if(line.empty())
-        return false;
-    if(hasBlanks(line))
-        return false;
-    if(!isAlphaNum(line))
-        return false;
-    flag = true;
+        if (i != keyfileIndex)
+        {
+            openFiles[i].clear();
+            openFiles[i].seekg(ios_base::beg);
+            readFromStream(openFiles[i], openFiles[keyfileIndex]);
+        }
     }
-
-return flag;
 }
-Enemy * Gallery::get(size_t n)
+
+bool Gallery::isKeyfile(istream &infile) const
 {
-    if(n >= size()) 
+    string line;
+    bool flag = false;
+    while (getline(infile, line))
+    {
+        if (line.empty())
+            return false;
+        if (hasBlanks(line))
+            return false;
+        if (!isAlphaNum(line))
+            return false;
+        flag = true;
+    }
+    return flag;
+}
+Enemy *Gallery::get(size_t n)
+{
+    if (n >= size())
         throw range_error("Index out of bounds: " + to_string(n) + " max is " + to_string(size()));
 
     return &collection[n];
 }
 
-const Enemy* Gallery::get(size_t n) const
+const Enemy *Gallery::get(size_t n) const
 {
-    if(n >= size()) 
+    if (n >= size())
         throw range_error("Index out of bounds: " + to_string(n) + " max is " + to_string(size()));
     return &collection[n];
 }
 
-ostream& operator<<(ostream& os, const Gallery & g)
+ostream &operator<<(ostream &os, const Gallery &g)
 {
-    for(size_t i = 0; i < g.collection.size(); i++){
+    for (size_t i = 0; i < g.collection.size(); i++)
+    {
         os << g.collection[i];
-        if(i < g.collection.size() - 1)
+        if (i < g.collection.size() - 1)
             os << '\n';
     }
     return os;

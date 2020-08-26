@@ -1,28 +1,23 @@
 #ifndef Keys_h
 #define Keys_h
-
-#include <vector>
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
 #include "Utilities.h"
+#include <string>
+#include <set>
 
 class Keys
 {
-typedef std::string string;
+    typedef std::string string;
+
 public:
     Keys() = default;
-    Keys(string k) {keys.push_back(k);};
     void add(const string &);
-    bool contains(const string &) const;
-    bool empty() const {return keys.empty();};
+    bool contains(const string &key) const { return keys.end() != keys.find(key); };
+    bool empty() const { return keys.empty(); };
     void clear() { keys.clear(); };
-    size_t size() const  {return keys.size();};
-    string &operator[](const size_t i){return keys[i];};
+    size_t size() const { return keys.size(); };
 
 private:
-    std::vector<string> keys;
+    std::set<string> keys;
 };
 
 #endif
