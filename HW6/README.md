@@ -7,24 +7,24 @@ You will improve on your work in HW5, adding some operators.       �
 ## Methods                
 Enemy must have the following additional public methods & operators:                
 
-### Enemy[key]
+#### Enemy[key]
     key can be either a C-style string or a std::string. Return a copy of the value for that key. If the key is not found, throw a range_error, including the bad key.
-### Enemy[size_t]
+#### Enemy[size_t]
     Given a zero-based index, return a by value a std::pair containing, in order, the corresponding key & value. If the index is out of range, throw a range_error, including the erroneous & maximum indices.
     A zero argument to [] does not necessarily return the first key/value pair read. The exact order is unspecified, but all pairs must be represented.
-### if (Enemy)
+#### if (Enemy)
     Succeed if and only if the Enemy is not empty.
-### if (Enemy1 == Enemy2)
+#### if (Enemy1 == Enemy2)
     Succeed if and only if the enemies have the same key/value pairs. This must work no matter in what order the key/value pairs were read.
-### if (Enemy1 != Enemy2)
+#### if (Enemy1 != Enemy2)
     Same as above, but inequality. 
 
 ## Gallery must have the following additional public methods & operators:                
 
-### Gallery[size_t]
+#### Gallery[size_t]
     Given a zero-based index, return a reference to the corresponding Enemy in this Gallery. If the Gallery is const, then return a const reference. If the index is out of range, throw a range_error, including the erroneous & maximum indices.
     A zero argument to [] does not necessarily return the first Enemy read. The exact order is unspecified, but all enemies must be represented.
-### if (Gallery)
+#### if (Gallery)
     Succeed if and only if the Gallery is not empty. 
 
 You may define other methods, data, or classes, public or private, as you see fit.                 
