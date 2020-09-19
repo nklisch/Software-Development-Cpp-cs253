@@ -12,30 +12,30 @@ Methods                
 
 The following methods & operators must work, where git is of type Gallery::iterator.                 
 
-### Gallery::begin()
+#### Gallery::begin()
     Returns an object of type Gallery::iterator that corresponds to the first Enemy in the Gallery. 
 
-### Gallery::end()
+#### Gallery::end()
     Returns an object of type Gallery::iterator that corresponds to one past the last Enemy in the Gallery.
     Past, I say! It does not correspond to the last item, since begin() & end() form a half-open interval. 
 
-### ++git
-### git++
-### --git
-### git--
+#### ++git
+#### git++
+#### --git
+#### git--
     Increments or decrements the iterator.
     Preincrement/predecrement return the new value, and postincrement/postdecrement return the previous value, in the same manner as ++ and -- work on integers. 
 
-### *git
+#### *git
     Yields a const reference to the Enemy associated with the iterator. 
 
-### git == git
-### git != git
+#### git == git
+#### git != git
 
     Compares two iterators for equality or inequality.
     Any other comparisons are undefined operations. 
 
-### copy, assignment
+#### copy, assignment
 
     Iterators are copy-constructable, and assignable. 
 
@@ -43,33 +43,33 @@ The following methods & operators must work, where git is of type Gallery::itera
 
 The following methods & operators must work, where eit is of type Enemy::iterator.                 
 
-### Enemy::begin()
+#### Enemy::begin()
 
     Returns an object of type Enemy::iterator that corresponds to the first key,value pair in the Enemy. 
 
-### Enemy::end()
+#### Enemy::end()
 
     Returns an object of type Enemy::iterator that corresponds to one past the last key,value pair in the Enemy.
     Past, I say! It does not correspond to the last item, since begin() & end() form a half-open interval. 
 
-### ++eit
-### eit++
-### --eit
-### eit--
+#### ++eit
+#### eit++
+#### --eit
+#### eit--
 
         Increments or decrements the iterator.
         Preincrement/predecrement return the new value, and postincrement/postdecrement return the previous value, in the same manner as ++ and -- work on integers. 
 
-### *eit
+#### *eit
 
     Yields the the corresponding pair containing the key,value associated with the iterator. This pair may be returned by value or const reference. 
 
-### eit == eit
-### eit != eit
+#### eit == eit
+#### eit != eit
     Compares two iterators for equality or inequality.
     Any other comparisons are undefined operations. 
 
-### copy, assignment
+#### copy, assignment
     Iterators are copy-constructable, and assignable. 
 
 Const-correctness is your job for all new methods & operators.                 
