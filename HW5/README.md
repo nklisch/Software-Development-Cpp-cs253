@@ -13,37 +13,37 @@ Methods
                 
 ## Gallery must have the following public methods:                
 
-### Gallery(two to six string filenames)
+#### Gallery(two to six string filenames)
     Creates a Gallery, and populates it with enemies read from the files given. Each file may contain any number of enemies. One of the files must be a keyfile, but, due to marketing incompetence, it could be any of the given files. You must decide, based on their contents, which file is the keyfile.
     Throw a runtime_error upon no keyfile or too many keyfiles. Throw a runtime_error, with the bad filename, upon a bad file or bad contents.
-### Copy constructor
+#### Copy constructor
     Takes another object of the same class, and deep-copies the information, replacing any previous information.
-### Assignment operator
+#### Assignment operator
     Takes another object of the same class, and deep-copies the information, replacing any previous information.
-### Destructor
+#### Destructor
     Destroys this object, including all the enemies associated with it.
-### .read(string filename, string keyfilename)
+#### .read(string filename, string keyfilename)
     Read enemies from this file, using this keyfile, adding them to the Gallery. Throw a runtime_error upon bad file or contents (either file); the object thrown must include the filename
-### .add(Enemy)
+#### .add(Enemy)
     Given an Enemy (not a pointer), add it to this Gallery. The Enemy is copied into the Gallery. Duplicate enemies are fine.
-### .clear()
+#### .clear()
     Make this Gallery empty.
-### .size()
+#### .size()
     Return the number of enemies in this object, as a size_t.
-### .empty()
+#### .empty()
     Return true iff this object has no entries.
-### .get(size_t n)
+#### .get(size_t n)
     Given a zero-based index, return a pointer to that Enemy. If the index is out of range, throw a range_error, including the erroneous & maximum indices.
     Provide two versions of this method: a const one that returns const Enemy *, and a non-const one that returns Enemy *.
     Like <<, below, the values returned may be in any order, as long as all are represented.
-### ostream << Gallery
+#### ostream << Gallery
     (Not a method.) Write all enemies in this object, with an empty line between enemies. The enemies may be in any order; that is, the first enemy added to the Gallery doesn’t have to be the first enemy written. 
 
 ## Enemy must have all the methods and behavior from the previous assignment, plus:                
 
-### Enemy()
+#### Enemy()
     The default (zero-argument) ctor is no longer required. Therefore, every Enemy must have an associated keyfile.
-### .link(string relation)
+#### .link(string relation)
     Returns a pointer to a related Enemy from the same Gallery. For example, given an Enemy e that has a line LinkSister Gretel, then e.link("Sister") returns an Enemy * pointing to the Enemy with the Name “Gretel”. Any modification of the associated Gallery may invalidate this pointer.
     If more than one Enemy in the associated Gallery has that Name, then it is unspecified which Enemy is chosen.
     Throw a runtime_error, mentioning the offending name, if this Enemy is not part of a Gallery. Throw a range_error, mentioning the offending name, if this Enemy has no corresponding Link… field, or if no enemy with this Name is found in the associated Gallery. 
