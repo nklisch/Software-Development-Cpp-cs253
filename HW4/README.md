@@ -7,22 +7,22 @@ For this assignment, you will convert your HW3 work to a standalone class, calle
 ## Methods                
 Enemy must have the following public methods:       
          
-### Enemy()
+#### Enemy()
     Create a Enemy containing no key/value pairs. This is an exception to the usual rule of a mandatory Name key.
 
-### Enemy(string keyfile)
+#### Enemy(string keyfile)
     Associate a keyfile with this enemy, for error-checking. The keyfile should contain one alphanumeric key per line. If it doesn’t, or if any other problem with the file or its contents is encountered, throw a runtime_error, mentioning the filename.
 
-### Copy constructor
+#### Copy constructor
     Copy all information from another object of the same class.
 
-### Assignment operator
+#### Assignment operator
     Copy all information from another object of the same class, replacing any previous information.
 
-### Destructor
+#### Destructor
     Destroy.
 
-### .read(istream)
+#### .read(istream)
     Read an Enemy from istream, replacing any previous information.
     - If a keyfile was provided in the ctor, and any key in the Enemy doesn’t appear in the keyfile, throw a runtime_error, mentioning the bad key.
     - If a non-alphanumeric key is encountered, throw a runtime_error, mentioning the bad key.
@@ -30,28 +30,28 @@ Enemy must have the following public methods:       
     - If no Name key is read, throw a runtime_error.
     - Return true if an enemy was read, false if no enemy found. 
 
-### .write(ostream)
+#### .write(ostream)
     Write the content of the Enemy to the ostream, as described in Output Format. Don’t add any extra blank lines.
-### .write(string filename)
+#### .write(string filename)
     Write the content of the Enemy to the given file, as described in Output Format. Throw a runtime_error, mentioning the filename, upon failure. Don’t add any extra blank lines.
-### .field(string key)
+#### .field(string key)
     Return the corresponding value for this key. Throw a range_error mentioning the bad key, if key not found.
-### .show_name(bool)
+#### .show_name(bool)
     This concerns keys that are exactly Name. If the argument is true or missing, show Name key/value pairs when writing the Enemy (via .write() or <<). If false, don’t.
-### .show_other(bool)
+#### .show_other(bool)
     If the argument is true or missing, show non-Name, non-Link… key/value pairs when writing the Enemy (via .write() or <<). If false, don’t.
-### .show_link(bool)
+#### .show_link(bool)
     This concerns keys that start with exactly Link, followed by any number of alphanumeric characters. If the argument is true or missing, show Link… key/value pairs when writing the Enemy (via .write() or <<). If false, don’t.
-### .clear()
+#### .clear()
     Make this Enemy have no key/value pairs.
-### .size()
+#### .size()
     Return a size_t containing the number of key/value pairs in this Enemy.
-### .empty()
+#### .empty()
     Return true iff Enemy has no key/value pairs. 
 
 ## Non-methods:                
 
-### ostream << Enemy
+#### ostream << Enemy
     The << output operator must produce the same output as .write(ostream). 
 
 Const-correctness, for arguments, methods, and operators, is your job. For example, it must be possible to call .size() on a const Enemy, or to pass a const string to .field().                 
